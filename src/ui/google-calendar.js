@@ -38,7 +38,7 @@ function drawPanel() {
   connectButton.textContent = expired ? "Reconnect" : "Connect Google Calendar";
   disconnectButton.hidden = !isConnected() && !expired;
 
-  if (!clientId) status.textContent = "Add a Google OAuth client ID in Settings to show your calendar here.";
+  if (!clientId) status.textContent = "Add an OAuth client ID below to show your calendar.";
   else if (expired) status.textContent = "Google sign-in lasts an hour. Reconnect to keep showing your events.";
   else if (!isConnected()) status.textContent = "Show your own events next to the flights. Read-only; nothing from Google is saved.";
   else status.textContent = "Your events show in grey. Choose which calendars to include:";

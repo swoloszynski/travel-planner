@@ -71,18 +71,6 @@
     </article>
 
     <article id="option-detail" class="option-detail"></article>
-
-    <article id="google">
-      <hgroup>
-        <h2>Google Calendar</h2>
-        <p id="google-status"></p>
-      </hgroup>
-      <ul id="google-calendars" class="google-calendars"></ul>
-      <div class="actions">
-        <button class="secondary" id="google-connect">Connect Google Calendar</button>
-        <button class="secondary outline" id="google-disconnect">Disconnect</button>
-      </div>
-    </article>
   </aside>
   <div id="calendar"></div>
 </main>
@@ -192,11 +180,20 @@
         Currency
         <input name="currency" maxlength="3" placeholder="USD" required>
       </label>
-      <label>
-        Google OAuth client ID
-        <input name="googleClientId" placeholder="…apps.googleusercontent.com">
-        <small>For showing your Google Calendar. It only works on the web addresses the ID allows.</small>
-      </label>
+      <fieldset>
+        <legend>Google Calendar</legend>
+        <p id="google-status"></p>
+        <ul id="google-calendars" class="google-calendars"></ul>
+        <div class="actions">
+          <button type="button" class="secondary" id="google-connect">Connect Google Calendar</button>
+          <button type="button" class="secondary outline" id="google-disconnect">Disconnect</button>
+        </div>
+        <label>
+          OAuth client ID
+          <input name="googleClientId" placeholder="…apps.googleusercontent.com">
+          <small>Sign-in only works on the web addresses this ID allows. Connecting and choosing calendars take effect right away.</small>
+        </label>
+      </fieldset>
     </form>
     <footer>
       <button type="button" class="secondary" data-close>Cancel</button>

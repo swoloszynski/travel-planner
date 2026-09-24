@@ -293,3 +293,7 @@ dialog legend {
   --fc-event-text-color: var(--pico-muted-color);
   font-style: italic;
 }
+
+#settings-dialog .actions {
+  margin-bottom: var(--pico-spacing);
+}
