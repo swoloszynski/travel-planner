@@ -306,6 +306,22 @@ button.secondary.outline:hover {
   background: #f0f1f3;
 }
 
+/* A link that looks like a bordered button. */
+a.button {
+  display: inline-block;
+  padding: 7px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  text-decoration: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+a.button:hover {
+  background: #f0f1f3;
+}
+
 button.small {
   padding: 4px 8px;
   font-size: 12px;

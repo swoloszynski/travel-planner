@@ -17,8 +17,13 @@
   <nav>
     <ul><li><strong>Travel Planner</strong></li></ul>
     <ul>
-      <li><button class="secondary outline" id="export">Export</button></li>
       <li><small id="backup-status" role="status"></small></li>
+      <li>
+        <a class="button" href="https://www.google.com/travel/flights" target="_blank" rel="noopener">
+          Open Google Flights ↗
+        </a>
+      </li>
+      <li><button class="secondary outline" id="export">Export</button></li>
       <li><button class="secondary outline" id="import" data-confirm="Replace everything?">Import</button></li>
       <li><button class="secondary outline" id="open-settings">Settings</button></li>
     </ul>
@@ -42,24 +47,6 @@
         <button class="link danger" data-action="delete-trip" data-confirm="Click again to delete this trip and its flights">
           Delete this trip
         </button>
-      </details>
-    </article>
-
-    <article id="search">
-      <details id="search-panel" open>
-        <summary><h2>Find flights</h2></summary>
-        <p class="hint">Opens Google Flights in a new tab. Copy a result, then use Paste flights below.</p>
-        <form id="search-form">
-          <div class="grid">
-            <label>From <input name="from" list="airports" placeholder="JFK" required></label>
-            <label>To <input name="to" list="airports" placeholder="LAX" required></label>
-          </div>
-          <div class="grid">
-            <label>Leave <input type="date" name="depart"></label>
-            <label>Return <input type="date" name="returns"></label>
-          </div>
-          <button>Search on Google Flights ↗</button>
-        </form>
       </details>
     </article>
 
