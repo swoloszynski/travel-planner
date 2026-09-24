@@ -118,12 +118,12 @@ function itineraryCard(itinerary, index, all) {
     <li class="itinerary">
       ${transfer &&
       html`<p class="warning">
-        Connects from itinerary ${number - 1} in ${transfer.airport} (${formatDuration(transfer.minutes)}) on a
+        Connects from booking ${number - 1} in ${transfer.airport} (${formatDuration(transfer.minutes)}) on a
         separate booking. If the earlier flight is late, this airline doesn't have to rebook you.
       </p>`}
       <div class="itinerary-head">
         <hgroup>
-          <p class="eyebrow">Itinerary ${number} <span class="kind kind-${kind}">${KIND_LABELS[kind]}</span></p>
+          <p class="eyebrow">Booking ${number} <span class="kind kind-${kind}">${KIND_LABELS[kind]}</span></p>
           <h3>${route}</h3>
           <p>${details.join(" · ")}</p>
           ${sleepMinutes ? html`<p class="sleep-note">${formatDuration(sleepMinutes)} during usual sleep</p>` : ""}
@@ -139,12 +139,12 @@ function itineraryCard(itinerary, index, all) {
       <footer class="itinerary-actions">
         <button class="link" data-action="add-flight" data-id="${id}">+ Add flight</button>
         ${others.length > 0 &&
-        html`<select data-action="merge-itinerary" data-id="${id}" aria-label="Combine with another itinerary">
+        html`<select data-action="merge-itinerary" data-id="${id}" aria-label="Combine with another booking">
           <option value="">Same booking as…</option>
-          ${others.map((other) => html`<option value="${other.id}">Itinerary ${other.number}: ${other.route}</option>`)}
+          ${others.map((other) => html`<option value="${other.id}">Booking ${other.number}: ${other.route}</option>`)}
         </select>`}
         <button class="link danger" data-action="delete-itinerary" data-id="${id}"
-          data-confirm="Click again to delete">Delete itinerary</button>
+          data-confirm="Click again to delete">Delete booking</button>
       </footer>
     </li>`;
 }
