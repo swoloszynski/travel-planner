@@ -1,12 +1,12 @@
-// The settings dialog. Each field is named after the setting it edits.
-import { state, commit } from "../app.js";
+// The settings panel. Each field is named after the setting it edits, and
+// changes save as soon as every field makes sense.
+import { state, commit, onChange } from "../app.js";
 import { applySettings } from "../calendar.js";
 import { isCurrency } from "../format.js";
 import { findTimezone } from "../timezones.js";
-import { showDialog } from "./dom.js";
 
-const dialog = document.getElementById("settings-dialog");
-const form = dialog.querySelector("form");
+const panel = document.getElementById("settings-panel");
+const form = document.getElementById("settings-form");
 const fields = form.elements;
 
 const PLAIN = [
@@ -23,16 +23,31 @@ const PLAIN = [
   "googleClientId",
 ];
 const NUMBERS = ["minutesToAirport", "minutesAtAirport", "minutesFromAirport", "daysToShow", "weekStart"];
+const EXTRA_ZONES = ["extraTimezone1", "extraTimezone2"];
+const TIMEZONE_FIELDS = ["displayTz", "sleepTz", ...EXTRA_ZONES];
 
-document.getElementById("open-settings").addEventListener("click", async () => {
-  fill(state.settings);
-  if ((await showDialog(dialog)) !== "save") return;
+// Leaves the form alone while it's being typed in.
+onChange(() => {
+  if (!form.contains(document.activeElement)) fill(state.settings);
+});
+
+document.getElementById("open-settings").addEventListener("click", () => {
+  panel.open = true;
+  panel.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
+form.addEventListener("input", check);
+
+// Checkboxes without a name, like the Google calendars, save themselves.
+form.addEventListener("change", (event) => {
+  if (!event.target.name) return;
+  check();
+  if (!event.target.reportValidity() || !form.checkValidity()) return;
   commit((s) => Object.assign(s.settings, read()));
   applySettings();
 });
 
-const EXTRA_ZONES = ["extraTimezone1", "extraTimezone2"];
-const TIMEZONE_FIELDS = ["displayTz", "sleepTz", ...EXTRA_ZONES];
+form.addEventListener("submit", (event) => event.preventDefault());
 
 function fill(settings) {
   PLAIN.forEach((name) => (fields[name].value = settings[name]));
@@ -51,8 +66,6 @@ function read() {
   settings.sleepEnabled = fields.sleepEnabled.checked;
   return settings;
 }
-
-form.addEventListener("input", check);
 
 function check() {
   const problem = (input, message) => input.setCustomValidity(message);

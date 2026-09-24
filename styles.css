@@ -268,7 +268,7 @@ button.link.danger {
   color: var(--pico-del-color);
 }
 
-dialog legend {
+.settings legend {
   font-weight: 600;
 }
 
@@ -297,7 +297,7 @@ dialog legend {
   font-style: italic;
 }
 
-#settings-dialog .actions {
+.settings .actions {
   margin-bottom: var(--pico-spacing);
 }
 
