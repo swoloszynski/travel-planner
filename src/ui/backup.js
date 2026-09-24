@@ -3,9 +3,17 @@ import { DateTime } from "luxon";
 import { state, replaceState } from "../app.js";
 import { restoreState } from "../state.js";
 import { applySettings, goToTripStart } from "../calendar.js";
-import { confirmAction, tell } from "./ask.js";
+import { confirmed } from "./dom.js";
 
 const fileInput = document.getElementById("import-file");
+const status = document.getElementById("backup-status");
+
+let clearStatus;
+function say(message) {
+  status.textContent = message;
+  clearTimeout(clearStatus);
+  clearStatus = setTimeout(() => (status.textContent = ""), 8000);
+}
 
 document.getElementById("export").addEventListener("click", () => {
   const file = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
@@ -16,7 +24,10 @@ document.getElementById("export").addEventListener("click", () => {
   URL.revokeObjectURL(link.href);
 });
 
-document.getElementById("import").addEventListener("click", () => fileInput.click());
+// Importing replaces everything, so the button asks first.
+document.getElementById("import").addEventListener("click", (event) => {
+  if (confirmed(event.currentTarget)) fileInput.click();
+});
 
 fileInput.addEventListener("change", async () => {
   const file = fileInput.files[0];
@@ -30,18 +41,13 @@ fileInput.addEventListener("change", async () => {
     // Not JSON; handled below.
   }
   if (!imported) {
-    await tell("Couldn't import that file", "It isn't a file exported from this version of Travel Planner.");
+    say(`${file.name} isn't a file exported from this version of Travel Planner.`);
     return;
   }
 
-  const count = imported.trips.length;
-  const replace = await confirmAction(
-    "Replace everything?",
-    `This replaces all your trips and settings with the ${count === 1 ? "trip" : `${count} trips`} in ${file.name}.`,
-    "Replace"
-  );
-  if (!replace) return;
   replaceState(imported);
+  const count = imported.trips.length;
+  say(`Imported ${count === 1 ? "1 trip" : `${count} trips`} from ${file.name}.`);
   applySettings();
   goToTripStart();
 });

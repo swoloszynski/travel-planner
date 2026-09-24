@@ -9,19 +9,6 @@ export function on(root, type, selector, handler) {
   });
 }
 
-// Opens a <dialog> and waits for it to close. Resolves with the value of
-// the submit button that closed it, or "" if it was cancelled.
-export function showDialog(dialog) {
-  dialog.returnValue = "";
-  dialog.showModal();
-  return new Promise((resolve) => {
-    dialog.addEventListener("close", () => resolve(dialog.returnValue), { once: true });
-  });
-}
-
-// Buttons marked data-close cancel the dialog they're in.
-on(document, "click", "dialog [data-close]", (button) => button.closest("dialog").close());
-
 // Replaces an element's contents. If something inside had focus, focuses
 // its replacement: the element with the same data attributes.
 export function redraw(element, content) {

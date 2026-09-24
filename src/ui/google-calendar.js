@@ -6,7 +6,6 @@ import { calendar, toDisplay } from "../calendar.js";
 import { SignInExpired, listCalendars, listEvents, savedToken, signIn, signOut } from "../google.js";
 import { html } from "../html.js";
 import { redraw } from "./dom.js";
-import { tell } from "./ask.js";
 
 const status = document.getElementById("google-status");
 const list = document.getElementById("google-calendars");
@@ -16,6 +15,7 @@ const disconnectButton = document.getElementById("google-disconnect");
 let token = savedToken();
 let calendars = [];
 let expired = false;
+let failure = "";
 // Signing in is tied to a client ID, so changing it in settings signs out.
 let clientId = state.settings.googleClientId;
 
@@ -38,7 +38,8 @@ function drawPanel() {
   connectButton.textContent = expired ? "Reconnect" : "Connect Google Calendar";
   disconnectButton.hidden = !isConnected() && !expired;
 
-  if (!clientId) status.textContent = "Add an OAuth client ID below to show your calendar.";
+  if (failure) status.textContent = `Couldn't connect to Google Calendar: ${failure}`;
+  else if (!clientId) status.textContent = "Add an OAuth client ID below to show your calendar.";
   else if (expired) status.textContent = "Google sign-in lasts an hour. Reconnect to keep showing your events.";
   else if (!isConnected()) status.textContent = "Show your own events next to the flights. Read-only; nothing from Google is saved.";
   else status.textContent = "Your events show in grey. Choose which calendars to include:";
@@ -102,9 +103,11 @@ connectButton.addEventListener("click", async () => {
   try {
     token = await signIn(clientId);
   } catch (error) {
-    await tell("Couldn't connect to Google Calendar", error.message);
+    failure = error.message;
+    drawPanel();
     return;
   }
+  failure = "";
   expired = false;
   await loadCalendars();
 });

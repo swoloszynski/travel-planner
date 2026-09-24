@@ -19,7 +19,8 @@
     <ul><li><strong>Travel Planner</strong></li></ul>
     <ul>
       <li><button class="secondary outline" id="export">Export</button></li>
-      <li><button class="secondary outline" id="import">Import</button></li>
+      <li><small id="backup-status" role="status"></small></li>
+      <li><button class="secondary outline" id="import" data-confirm="Replace everything?">Import</button></li>
       <li><button class="secondary outline" id="open-settings">Settings</button></li>
     </ul>
   </nav>
@@ -147,20 +148,6 @@
   </aside>
   <div id="calendar"></div>
 </main>
-
-<dialog id="ask">
-  <article>
-    <h2></h2>
-    <form method="dialog" id="ask-form">
-      <p></p>
-      <input name="answer" aria-label="Answer" required>
-    </form>
-    <footer>
-      <button type="button" class="secondary" data-close>Cancel</button>
-      <button form="ask-form" value="ok">OK</button>
-    </footer>
-  </article>
-</dialog>
 
 <input type="file" id="import-file" accept="application/json" hidden>
 <datalist id="airports"></datalist>
