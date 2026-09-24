@@ -1,8 +1,5 @@
-import { loadState } from "./storage.js";
-import { activeTrip } from "./state.js";
-import { createCalendar, goToTripStart } from "./calendar.js";
+// Each module below draws and handles one part of the page.
+import { render } from "./app.js";
+import "./calendar.js";
 
-let state = loadState();
-
-const calendar = createCalendar(document.getElementById("calendar"), () => state);
-goToTripStart(calendar, activeTrip(state));
+render();
