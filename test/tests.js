@@ -9,6 +9,7 @@ import "./timezones.test.js";
 import "./html.test.js";
 import "./state.test.js";
 import "./storage.test.js";
+import "./sync.test.js";
 import "./events.test.js";
 import "./google-flights.test.js";
 
