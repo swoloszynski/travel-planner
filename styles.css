@@ -264,3 +264,7 @@ button.link.danger {
   display: block;
   font-size: 0.875rem;
 }
+
+dialog legend {
+  font-weight: 600;
+}

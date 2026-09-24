@@ -16,6 +16,9 @@
 <header class="container-fluid">
   <nav>
     <ul><li><strong>Travel Planner</strong></li></ul>
+    <ul>
+      <li><button class="secondary outline" id="open-settings">Settings</button></li>
+    </ul>
   </nav>
 </header>
 
@@ -114,6 +117,70 @@
     <footer>
       <button type="button" class="secondary" data-close>Cancel</button>
       <button form="flight-form" value="save"></button>
+    </footer>
+  </article>
+</dialog>
+
+<dialog id="settings-dialog">
+  <article>
+    <h2>Settings</h2>
+    <form method="dialog" id="settings-form">
+      <fieldset>
+        <legend>Calendar</legend>
+        <label>
+          Show times in this timezone
+          <input name="displayTz" list="timezones" required>
+        </label>
+        <label>
+          Also label times in these timezones
+          <input name="extraTimezones" list="timezones" placeholder="America/Los_Angeles, Europe/London">
+          <small>Separate them with commas.</small>
+        </label>
+        <div class="grid">
+          <label>Days to show <input type="number" name="daysToShow" min="1" max="7" required></label>
+          <label>
+            Week starts on
+            <select name="weekStart">
+              <option value="0">Sunday</option>
+              <option value="1">Monday</option>
+              <option value="2">Tuesday</option>
+              <option value="3">Wednesday</option>
+              <option value="4">Thursday</option>
+              <option value="5">Friday</option>
+              <option value="6">Saturday</option>
+            </select>
+          </label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Time around each flight, in minutes</legend>
+        <label>Getting to the airport <input type="number" name="minutesToAirport" min="0" step="5" required></label>
+        <label>At the airport before takeoff <input type="number" name="minutesAtAirport" min="0" step="5" required></label>
+        <label>Getting away after landing <input type="number" name="minutesFromAirport" min="0" step="5" required></label>
+      </fieldset>
+      <fieldset>
+        <legend>Usual sleep</legend>
+        <label>
+          <input type="checkbox" role="switch" name="sleepEnabled">
+          Shade my usual sleep hours on the calendar
+        </label>
+        <div class="grid">
+          <label>Bedtime <input type="time" name="sleepStart" required></label>
+          <label>Wake up <input type="time" name="sleepEnd" required></label>
+        </div>
+        <label>
+          Timezone my body clock is on
+          <input name="sleepTz" list="timezones">
+        </label>
+      </fieldset>
+      <label>
+        Currency
+        <input name="currency" maxlength="3" placeholder="USD" required>
+      </label>
+    </form>
+    <footer>
+      <button type="button" class="secondary" data-close>Cancel</button>
+      <button form="settings-form" value="save">Save</button>
     </footer>
   </article>
 </dialog>
