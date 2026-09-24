@@ -4,7 +4,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Travel Planner</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2.1.1/css/pico.min.css">
 <link rel="stylesheet" href="styles.css">
 <script type="importmap">
   { "imports": { "luxon": "https://cdn.jsdelivr.net/npm/luxon@3.5.0/build/es6/luxon.js" } }
@@ -14,7 +13,7 @@
 <script type="module" src="src/main.js"></script>
 </head>
 <body>
-<header class="container-fluid">
+<header>
   <nav>
     <ul><li><strong>Travel Planner</strong></li></ul>
     <ul>
@@ -26,21 +25,23 @@
   </nav>
 </header>
 
-<main class="container-fluid layout">
+<main class="layout">
   <aside class="sidebar">
     <article id="trip">
       <details id="trip-panel" open>
         <summary><h2>Trip <span id="trip-name"></span></h2></summary>
-        <div id="trip-picker" class="trip-picker"></div>
-        <label>
-          Starts on
+        <div class="trip-row">
+          <div id="trip-picker" class="trip-picker"></div>
+          <button class="secondary outline small" data-action="rename-trip">Rename</button>
+          <button class="secondary outline small" data-action="new-trip">+ New trip</button>
+        </div>
+        <label class="trip-start">
+          Trip starts
           <input type="date" id="trip-start">
         </label>
-        <div class="actions">
-          <button class="secondary outline" data-action="rename-trip">Rename</button>
-          <button class="secondary outline" data-action="new-trip">New trip</button>
-          <button class="secondary outline" data-action="delete-trip" data-confirm="Delete trip and its flights?">Delete</button>
-        </div>
+        <button class="link danger" data-action="delete-trip" data-confirm="Click again to delete this trip and its flights">
+          Delete this trip
+        </button>
       </details>
     </article>
 
@@ -57,7 +58,7 @@
             <label>Leave <input type="date" name="depart"></label>
             <label>Return <input type="date" name="returns"></label>
           </div>
-          <button>Search Google Flights</button>
+          <button>Search on Google Flights ↗</button>
         </form>
       </details>
     </article>
@@ -68,7 +69,7 @@
         <p>Checked options show on the calendar.</p>
       </hgroup>
       <ul id="option-list" class="option-list"></ul>
-      <button class="secondary outline" data-action="add-option">New option</button>
+      <button class="link" data-action="add-option">+ New option</button>
     </article>
 
     <article id="option-detail" class="option-detail"></article>
@@ -118,7 +119,7 @@
       <fieldset>
         <legend>Usual sleep</legend>
         <label>
-          <input type="checkbox" role="switch" name="sleepEnabled">
+          <input type="checkbox" name="sleepEnabled">
           Shade my usual sleep hours on the calendar
         </label>
         <div class="grid">

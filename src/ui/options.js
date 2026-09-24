@@ -98,13 +98,13 @@ function optionDetail(option) {
       <strong>${cost.count ? costText(cost) : ""}</strong>
     </header>
     ${editorAt("option", option.id) ??
-    html`<p><button data-action="add-booking" data-id="${option.id}">Add flights</button></p>`}
+    html`<p><button class="small" data-action="add-booking" data-id="${option.id}">+ Add flights</button></p>`}
     ${option.itineraries.length
       ? html`<ol class="itineraries">${option.itineraries.map(itineraryCard)}</ol>`
       : html`<p class="empty">No flights yet.</p>`}
     <footer class="actions">
-      <button class="secondary outline" data-action="delete-option" data-id="${option.id}"
-        data-confirm="Delete option and its flights?">Delete option</button>
+      <button class="link danger" data-action="delete-option" data-id="${option.id}"
+        data-confirm="Click again to delete this option and its flights">Delete option</button>
     </footer>`;
 }
 
@@ -123,7 +123,7 @@ function itineraryCard(itinerary, index, all) {
       </p>`}
       <div class="itinerary-head">
         <hgroup>
-          <p>Itinerary ${number} · ${KIND_LABELS[kind]}</p>
+          <p class="eyebrow">Itinerary ${number} <span class="kind kind-${kind}">${KIND_LABELS[kind]}</span></p>
           <h3>${route}</h3>
           <p>${details.join(" · ")}</p>
           ${sleepMinutes ? html`<p class="sleep-note">${formatDuration(sleepMinutes)} during usual sleep</p>` : ""}
@@ -137,14 +137,14 @@ function itineraryCard(itinerary, index, all) {
       ${directions.map((direction, i) => directionBlock(direction, directionName(kind, directions.length, i)))}
       ${editorAt("itinerary", id)}
       <footer class="itinerary-actions">
-        <button class="link" data-action="add-flight" data-id="${id}">Add flight</button>
+        <button class="link" data-action="add-flight" data-id="${id}">+ Add flight</button>
         ${others.length > 0 &&
         html`<select data-action="merge-itinerary" data-id="${id}" aria-label="Combine with another itinerary">
           <option value="">Same booking as…</option>
           ${others.map((other) => html`<option value="${other.id}">Itinerary ${other.number}: ${other.route}</option>`)}
         </select>`}
         <button class="link danger" data-action="delete-itinerary" data-id="${id}"
-          data-confirm="Delete itinerary and its flights?">Delete itinerary</button>
+          data-confirm="Click again to delete">Delete itinerary</button>
       </footer>
     </li>`;
 }

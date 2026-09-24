@@ -58,10 +58,10 @@ export function editorAt(target, id) {
           <textarea rows="4" data-field="pasted"
             placeholder="Mon, Oct 5&#10;Delta&#10;6:00 AM – 9:32 AM&#10;JFK–LAX&#10;$289">${pasted}</textarea>
         </label>
-        <button type="button" class="secondary" data-editor-action="fill">Fill in from paste</button>
+        <button type="button" class="secondary small" data-editor-action="fill">Fill in from paste ↓</button>
         ${message && html`<p class="hint" role="status">${message}</p>`}`}
       ${legs.map((leg, row) => legFields(leg, row, legs.length > 1))}
-      ${canPaste && html`<p><button type="button" class="link" data-editor-action="add-row">Add another flight</button></p>`}
+      ${canPaste && html`<p><button type="button" class="link" data-editor-action="add-row">+ Add another flight</button></p>`}
       ${target === "option" &&
       html`<label>
         Price for this booking

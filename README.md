@@ -23,4 +23,4 @@ To add a paste case, see [test/fixtures/paste/README.md](test/fixtures/paste/REA
 - `src/model.js`, `sleep.js`, `describe.js`, `events.js` and `parse.js` hold the rules about flights. They don't touch the page, and `test/` covers them.
 - `src/state.js` is the saved data and the edits made to it. `src/app.js` holds the current state; each part of the page changes it through `commit` and redraws in `onChange`.
 - `src/calendar.js` and `src/ui/` each draw and handle one part of the page. `src/main.js` loads them.
-- Pico CSS styles the page. `styles.css` adds the layout and what Pico doesn't cover.
+- `styles.css` styles the whole page; there is no CSS framework.

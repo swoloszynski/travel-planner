@@ -17,13 +17,14 @@ onChange(() => {
   const trip = activeTrip(state);
   tripName.textContent = trip.name;
   startDate.value = trip.startDate;
+  section.classList.toggle("renaming", renaming);
   redraw(
     picker,
     renaming
       ? html`<div role="group">
           <input data-action="trip-name" value="${trip.name}" aria-label="Trip name">
-          <button data-action="save-name">Save</button>
-          <button class="secondary outline" data-action="cancel-rename">Cancel</button>
+          <button class="small" data-action="save-name">Save</button>
+          <button class="secondary outline small" data-action="cancel-rename">Cancel</button>
         </div>`
       : html`<select data-action="pick-trip" aria-label="Trip">
           ${state.trips.map(
