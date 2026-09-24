@@ -4,16 +4,9 @@ import { state, replaceState } from "../app.js";
 import { restoreState } from "../state.js";
 import { applySettings, goToTripStart } from "../calendar.js";
 import { confirmed } from "./dom.js";
+import { say } from "./status.js";
 
 const fileInput = document.getElementById("import-file");
-const status = document.getElementById("backup-status");
-
-let clearStatus;
-function say(message) {
-  status.textContent = message;
-  clearTimeout(clearStatus);
-  clearStatus = setTimeout(() => (status.textContent = ""), 8000);
-}
 
 document.getElementById("export").addEventListener("click", () => {
   const file = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
