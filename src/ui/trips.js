@@ -9,8 +9,10 @@ import { askText, confirmDelete } from "./ask.js";
 const section = document.getElementById("trip");
 const picker = document.getElementById("trip-picker");
 const startDate = document.getElementById("trip-start");
+const tripName = document.getElementById("trip-name");
 
 onChange(() => {
+  tripName.textContent = activeTrip(state).name;
   picker.innerHTML = html`${state.trips.map((trip) => html`<option value="${trip.id}">${trip.name}</option>`)}`;
   picker.value = state.activeTripId;
   startDate.value = activeTrip(state).startDate;

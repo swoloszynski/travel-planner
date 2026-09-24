@@ -297,3 +297,34 @@ dialog legend {
 #settings-dialog .actions {
   margin-bottom: var(--pico-spacing);
 }
+
+/* Collapsible panels */
+
+.sidebar details {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.sidebar summary h2 {
+  display: inline;
+  margin: 0;
+}
+
+.sidebar details[open] > summary {
+  margin-bottom: var(--pico-spacing);
+}
+
+#trip-name {
+  font-weight: normal;
+  color: var(--pico-muted-color);
+}
+
+#trip-name::before {
+  content: "· ";
+}
+
+.hint {
+  font-size: 0.875rem;
+  color: var(--pico-muted-color);
+}

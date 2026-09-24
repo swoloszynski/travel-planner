@@ -28,37 +28,40 @@
 <main class="container-fluid layout">
   <aside class="sidebar">
     <article id="trip">
-      <label>
-        Trip
-        <select id="trip-picker"></select>
-      </label>
-      <label>
-        Starts on
-        <input type="date" id="trip-start">
-      </label>
-      <div class="actions">
-        <button class="secondary outline" data-action="rename-trip">Rename</button>
-        <button class="secondary outline" data-action="new-trip">New trip</button>
-        <button class="secondary outline" data-action="delete-trip">Delete</button>
-      </div>
+      <details id="trip-panel" open>
+        <summary><h2>Trip <span id="trip-name"></span></h2></summary>
+        <label>
+          Trip
+          <select id="trip-picker"></select>
+        </label>
+        <label>
+          Starts on
+          <input type="date" id="trip-start">
+        </label>
+        <div class="actions">
+          <button class="secondary outline" data-action="rename-trip">Rename</button>
+          <button class="secondary outline" data-action="new-trip">New trip</button>
+          <button class="secondary outline" data-action="delete-trip">Delete</button>
+        </div>
+      </details>
     </article>
 
     <article id="search">
-      <hgroup>
-        <h2>Find flights</h2>
-        <p>Opens Google Flights in a new tab. Copy a result, then use Paste flights below.</p>
-      </hgroup>
-      <form id="search-form">
-        <div class="grid">
-          <label>From <input name="from" list="airports" placeholder="JFK" required></label>
-          <label>To <input name="to" list="airports" placeholder="LAX" required></label>
-        </div>
-        <div class="grid">
-          <label>Leave <input type="date" name="depart"></label>
-          <label>Return <input type="date" name="returns"></label>
-        </div>
-        <button>Search Google Flights</button>
-      </form>
+      <details id="search-panel" open>
+        <summary><h2>Find flights</h2></summary>
+        <p class="hint">Opens Google Flights in a new tab. Copy a result, then use Paste flights below.</p>
+        <form id="search-form">
+          <div class="grid">
+            <label>From <input name="from" list="airports" placeholder="JFK" required></label>
+            <label>To <input name="to" list="airports" placeholder="LAX" required></label>
+          </div>
+          <div class="grid">
+            <label>Leave <input type="date" name="depart"></label>
+            <label>Return <input type="date" name="returns"></label>
+          </div>
+          <button>Search Google Flights</button>
+        </form>
+      </details>
     </article>
 
     <article id="options">
