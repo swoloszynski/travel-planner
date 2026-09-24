@@ -1,5 +1,13 @@
 /* Pico styles the page. This file adds the layout and what Pico doesn't cover. */
 
+/* Pico enlarges text on wide screens, up to 21px, and pads controls
+   generously. Keep one comfortable size instead. */
+:root {
+  --pico-font-size: 93.75%;
+  --pico-form-element-spacing-vertical: 0.5rem;
+  --pico-form-element-spacing-horizontal: 0.75rem;
+}
+
 .layout {
   display: grid;
   grid-template-columns: 28rem 1fr;
