@@ -6,5 +6,6 @@ import "./parse.test.js";
 import "./describe.test.js";
 import "./format.test.js";
 import "./html.test.js";
+import "./state.test.js";
 
 run();
