@@ -264,6 +264,11 @@ button.link.danger {
   color: var(--pico-del-color);
 }
 
+.settings h2 {
+  margin-bottom: 0.25rem;
+  font-size: 1.25rem;
+}
+
 .settings legend {
   font-weight: 600;
 }

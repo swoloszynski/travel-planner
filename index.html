@@ -72,82 +72,88 @@
     </article>
 
     <article id="option-detail" class="option-detail"></article>
-    <article id="settings" class="settings">
-      <details id="settings-panel">
-        <summary><h2>Settings</h2></summary>
-        <p class="hint">Changes save as you make them.</p>
-        <form id="settings-form">
-          <fieldset>
-            <legend>Calendar</legend>
-            <label>
-              Show times in this timezone
-              <input name="displayTz" list="timezones" required>
-            </label>
-            <div class="grid">
-              <label>Also label times in <input name="extraTimezone1" list="timezones" placeholder="Los Angeles"></label>
-              <label>and in <input name="extraTimezone2" list="timezones" placeholder="London"></label>
-            </div>
-            <div class="grid">
-              <label>Days to show <input type="number" name="daysToShow" min="1" max="7" required></label>
-              <label>
-                Week starts on
-                <select name="weekStart">
-                  <option value="0">Sunday</option>
-                  <option value="1">Monday</option>
-                  <option value="2">Tuesday</option>
-                  <option value="3">Wednesday</option>
-                  <option value="4">Thursday</option>
-                  <option value="5">Friday</option>
-                  <option value="6">Saturday</option>
-                </select>
-              </label>
-            </div>
-          </fieldset>
-          <fieldset>
-            <legend>Time around each flight, in minutes</legend>
-            <label>Getting to the airport <input type="number" name="minutesToAirport" min="0" step="5" required></label>
-            <label>At the airport before takeoff <input type="number" name="minutesAtAirport" min="0" step="5" required></label>
-            <label>Getting away after landing <input type="number" name="minutesFromAirport" min="0" step="5" required></label>
-          </fieldset>
-          <fieldset>
-            <legend>Usual sleep</legend>
-            <label>
-              <input type="checkbox" role="switch" name="sleepEnabled">
-              Shade my usual sleep hours on the calendar
-            </label>
-            <div class="grid">
-              <label>Bedtime <input type="time" name="sleepStart" required></label>
-              <label>Wake up <input type="time" name="sleepEnd" required></label>
-            </div>
-            <label>
-              Timezone my body clock is on
-              <input name="sleepTz" list="timezones">
-            </label>
-          </fieldset>
-          <label>
-            Currency
-            <input name="currency" maxlength="3" placeholder="USD" required>
-          </label>
-          <fieldset>
-            <legend>Google Calendar</legend>
-            <p id="google-status"></p>
-            <ul id="google-calendars" class="google-calendars"></ul>
-            <div class="actions">
-              <button type="button" class="secondary" id="google-connect">Connect Google Calendar</button>
-              <button type="button" class="secondary outline" id="google-disconnect">Disconnect</button>
-            </div>
-            <label>
-              OAuth client ID
-              <input name="googleClientId" placeholder="…apps.googleusercontent.com">
-              <small>Sign-in only works on the web addresses this ID allows. Connecting and choosing calendars take effect right away.</small>
-            </label>
-          </fieldset>
-        </form>
-      </details>
-    </article>
   </aside>
   <div id="calendar"></div>
 </main>
+
+<dialog id="settings-dialog">
+  <article class="settings">
+    <header>
+      <h2>Settings</h2>
+      <p class="hint">Changes save as you make them.</p>
+    </header>
+    <form id="settings-form">
+      <fieldset>
+        <legend>Calendar</legend>
+        <label>
+          Show times in this timezone
+          <input name="displayTz" list="timezones" required>
+        </label>
+        <div class="grid">
+          <label>Also label times in <input name="extraTimezone1" list="timezones" placeholder="Los Angeles"></label>
+          <label>and in <input name="extraTimezone2" list="timezones" placeholder="London"></label>
+        </div>
+        <div class="grid">
+          <label>Days to show <input type="number" name="daysToShow" min="1" max="7" required></label>
+          <label>
+            Week starts on
+            <select name="weekStart">
+              <option value="0">Sunday</option>
+              <option value="1">Monday</option>
+              <option value="2">Tuesday</option>
+              <option value="3">Wednesday</option>
+              <option value="4">Thursday</option>
+              <option value="5">Friday</option>
+              <option value="6">Saturday</option>
+            </select>
+          </label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Time around each flight, in minutes</legend>
+        <label>Getting to the airport <input type="number" name="minutesToAirport" min="0" step="5" required></label>
+        <label>At the airport before takeoff <input type="number" name="minutesAtAirport" min="0" step="5" required></label>
+        <label>Getting away after landing <input type="number" name="minutesFromAirport" min="0" step="5" required></label>
+      </fieldset>
+      <fieldset>
+        <legend>Usual sleep</legend>
+        <label>
+          <input type="checkbox" role="switch" name="sleepEnabled">
+          Shade my usual sleep hours on the calendar
+        </label>
+        <div class="grid">
+          <label>Bedtime <input type="time" name="sleepStart" required></label>
+          <label>Wake up <input type="time" name="sleepEnd" required></label>
+        </div>
+        <label>
+          Timezone my body clock is on
+          <input name="sleepTz" list="timezones">
+        </label>
+      </fieldset>
+      <label>
+        Currency
+        <input name="currency" maxlength="3" placeholder="USD" required>
+      </label>
+      <fieldset>
+        <legend>Google Calendar</legend>
+        <p id="google-status"></p>
+        <ul id="google-calendars" class="google-calendars"></ul>
+        <div class="actions">
+          <button type="button" class="secondary" id="google-connect">Connect Google Calendar</button>
+          <button type="button" class="secondary outline" id="google-disconnect">Disconnect</button>
+        </div>
+        <label>
+          OAuth client ID
+          <input name="googleClientId" placeholder="…apps.googleusercontent.com">
+          <small>Sign-in only works on the web addresses this ID allows. Connecting and choosing calendars take effect right away.</small>
+        </label>
+      </fieldset>
+    </form>
+    <footer>
+      <button id="close-settings">Done</button>
+    </footer>
+  </article>
+</dialog>
 
 <input type="file" id="import-file" accept="application/json" hidden>
 <datalist id="airports"></datalist>

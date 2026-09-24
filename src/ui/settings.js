@@ -1,11 +1,11 @@
-// The settings panel. Each field is named after the setting it edits, and
+// The settings dialog. Each field is named after the setting it edits, and
 // changes save as soon as every field makes sense.
 import { state, commit, onChange } from "../app.js";
 import { applySettings } from "../calendar.js";
 import { isCurrency } from "../format.js";
 import { findTimezone } from "../timezones.js";
 
-const panel = document.getElementById("settings-panel");
+const dialog = document.getElementById("settings-dialog");
 const form = document.getElementById("settings-form");
 const fields = form.elements;
 
@@ -32,9 +32,11 @@ onChange(() => {
 });
 
 document.getElementById("open-settings").addEventListener("click", () => {
-  panel.open = true;
-  panel.scrollIntoView({ behavior: "smooth", block: "start" });
+  fill(state.settings);
+  dialog.showModal();
 });
+
+document.getElementById("close-settings").addEventListener("click", () => dialog.close());
 
 form.addEventListener("input", check);
 
