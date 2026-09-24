@@ -115,3 +115,13 @@ export function selfTransfers(itineraries) {
   }
   return transfers;
 }
+
+// From leaving for the departure airport to getting away from the
+// arrival airport, for one direction.
+export function doorToDoor(direction, settings) {
+  const { minutesToAirport, minutesAtAirport, minutesFromAirport } = settings;
+  return {
+    start: departure(direction[0]).minus({ minutes: minutesAtAirport + minutesToAirport }),
+    end: arrival(direction.at(-1)).plus({ minutes: minutesFromAirport }),
+  };
+}
