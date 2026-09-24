@@ -1,10 +1,24 @@
 // Google Flights searches for a booking, written the way someone would
-// type them.
+// type them. Google applies "Nonstop" and an airline's name as filters.
+// It doesn't understand departure times in a typed search, so those can't
+// narrow it down.
 import { itineraryKind, splitDirections } from "./model.js";
 
-function searchUrl(from, to, depart, returns) {
-  let query = `Flights from ${from} to ${to} on ${depart}`;
-  if (returns) query += ` returning ${returns}`;
+// `directions` are the ones the search covers: one, or two for a round
+// trip.
+function searchUrl(directions, returns) {
+  const [out] = directions;
+  const legs = directions.flat();
+  const airlines = new Set(legs.map((leg) => leg.airline));
+  const [airline] = airlines;
+  const filters = [
+    directions.every((direction) => direction.length === 1) && "nonstop",
+    airlines.size === 1 && airline,
+  ].filter(Boolean);
+
+  let query = [...filters, "flights"].join(" ") + ` from ${out[0].from} to ${out.at(-1).to} on ${date(out[0])}`;
+  if (returns) query += ` returning ${date(returns[0])}`;
+  query = query[0].toUpperCase() + query.slice(1);
   return `https://www.google.com/travel/flights?q=${encodeURIComponent(query)}`;
 }
 
@@ -16,15 +30,14 @@ const date = (leg) => leg.departs.slice(0, 10);
 export function googleFlightsSearches(legs) {
   const directions = splitDirections(legs);
   const kind = itineraryKind(legs);
-  const [out, back] = directions;
   if (kind === "oneway") {
-    return [{ label: "Find in Google Flights", url: searchUrl(out[0].from, out.at(-1).to, date(out[0])) }];
+    return [{ label: "Find in Google Flights", url: searchUrl(directions) }];
   }
   if (kind === "roundtrip") {
-    return [{ label: "Find in Google Flights", url: searchUrl(out[0].from, out.at(-1).to, date(out[0]), date(back[0])) }];
+    return [{ label: "Find in Google Flights", url: searchUrl(directions, directions[1]) }];
   }
   return directions.map((direction) => ({
     label: `Find ${direction[0].from} → ${direction.at(-1).to}`,
-    url: searchUrl(direction[0].from, direction.at(-1).to, date(direction[0])),
+    url: searchUrl([direction]),
   }));
 }
