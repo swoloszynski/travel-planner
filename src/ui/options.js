@@ -7,7 +7,6 @@ import {
   deleteLeg,
   deleteOption,
   findItinerary,
-  mergeItineraries,
 } from "../state.js";
 import {
   KIND_LABELS,
@@ -96,9 +95,8 @@ function optionDetail(option) {
     </footer>`;
 }
 
-function itineraryCard(itinerary, index, all) {
+function itineraryCard(itinerary) {
   const { id, number, kind, route, directions, transfer, sleepMinutes, price } = itinerary;
-  const others = all.filter((other) => other !== itinerary);
   const dates = [...new Set(directions.map((d) => formatDate(departure(d[0]))))].join(" – ");
   const details = directions.length === 1 ? [dates, stopsText(directions[0])] : [dates];
 
@@ -129,11 +127,6 @@ function itineraryCard(itinerary, index, all) {
         ${googleFlightsSearches(itinerary.legs).map(
           ({ label, url }) => html`<a class="link" href="${url}" target="_blank" rel="noopener">${label} ↗</a>`
         )}
-        ${others.length > 0 &&
-        html`<select data-action="merge-itinerary" data-id="${id}" aria-label="Combine with another booking">
-          <option value="">Same booking as…</option>
-          ${others.map((other) => html`<option value="${other.id}">Booking ${other.number}: ${other.route}</option>`)}
-        </select>`}
         <button class="link danger" data-action="delete-itinerary" data-id="${id}"
           data-confirm="Click again to delete">Delete booking</button>
       </footer>
@@ -222,14 +215,6 @@ const actions = {
 
   "set-price"(id, input) {
     commit(() => (findItinerary(activeTrip(state), id).itinerary.price = parsePrice(input.value)));
-  },
-
-  // Prices are added together; the combined price shows on the card to
-  // change if the fare is different.
-  "merge-itinerary"(id, select) {
-    const trip = activeTrip(state);
-    const { option } = findItinerary(trip, id);
-    if (select.value) commit(() => mergeItineraries(option, id, select.value));
   },
 
   "delete-itinerary"(id, button) {

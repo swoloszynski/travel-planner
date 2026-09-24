@@ -10,7 +10,6 @@ import {
   addOption,
   deleteOption,
   addItinerary,
-  mergeItineraries,
   deleteLeg,
   findLeg,
 } from "../src/state.js";
@@ -59,24 +58,6 @@ test("addItinerary gives each flight an id", () => {
   const itinerary = addItinerary(option, [outbound], 289);
   assertEqual(itinerary.price, 289);
   assertEqual(typeof itinerary.legs[0].id, "string");
-});
-
-test("mergeItineraries moves flights into one booking and adds prices", () => {
-  const option = activeTrip(createState()).options[0];
-  const out = addItinerary(option, [outbound], 200);
-  const home = addItinerary(option, [back], 150);
-  mergeItineraries(option, home.id, out.id);
-  assertEqual(option.itineraries.length, 1);
-  assertEqual(out.legs.length, 2);
-  assertEqual(out.price, 350);
-});
-
-test("mergeItineraries keeps no price when neither had one", () => {
-  const option = activeTrip(createState()).options[0];
-  const out = addItinerary(option, [outbound]);
-  const home = addItinerary(option, [back]);
-  mergeItineraries(option, home.id, out.id);
-  assertEqual(out.price, null);
 });
 
 test("deleting an itinerary's last flight deletes the itinerary", () => {

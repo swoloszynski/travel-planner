@@ -112,16 +112,6 @@ export function deleteItinerary(option, itineraryId) {
   option.itineraries = option.itineraries.filter((it) => it.id !== itineraryId);
 }
 
-// For itineraries that turn out to be one booking. Prices are added
-// together, since each may have covered part of the fare.
-export function mergeItineraries(option, fromId, intoId) {
-  const from = option.itineraries.find((it) => it.id === fromId);
-  const into = option.itineraries.find((it) => it.id === intoId);
-  into.legs.push(...from.legs);
-  if (from.price !== null || into.price !== null) into.price = (from.price ?? 0) + (into.price ?? 0);
-  deleteItinerary(option, fromId);
-}
-
 export function findItinerary(trip, itineraryId) {
   for (const option of trip.options) {
     const itinerary = option.itineraries.find((it) => it.id === itineraryId);
