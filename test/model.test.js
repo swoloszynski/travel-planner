@@ -1,6 +1,14 @@
 import { test, assertEqual } from "./runner.js";
 import { flight } from "./helpers.js";
-import { flightMinutes, splitDirections, itineraryKind, routeText } from "../src/model.js";
+import {
+  flightMinutes,
+  splitDirections,
+  itineraryKind,
+  routeText,
+  sortItineraries,
+  optionCost,
+  selfTransfers,
+} from "../src/model.js";
 
 const outbound = flight("JFK 2026-10-05 06:00", "LAX 2026-10-05 09:32");
 const back = flight("LAX 2026-10-12 13:00", "JFK 2026-10-12 21:30");
@@ -40,4 +48,27 @@ test("routeText lists where each direction starts and ends", () => {
   const onward = flight("LAX 2026-10-12 13:00", "SEA 2026-10-12 15:45");
   assertEqual(routeText([toDenver, denverToSfo]), "LGA → SFO");
   assertEqual(routeText([outbound, onward]), "JFK → LAX → SEA");
+});
+
+const itinerary = (id, price, legs) => ({ id, price, legs });
+
+test("sortItineraries puts itineraries in travel order", () => {
+  const later = itinerary("later", null, [back]);
+  const earlier = itinerary("earlier", null, [outbound]);
+  assertEqual(sortItineraries([later, earlier]).map((it) => it.id), ["earlier", "later"]);
+});
+
+test("optionCost adds up prices and counts itineraries without one", () => {
+  const itineraries = [itinerary("a", 289, [outbound]), itinerary("b", 150.5, [back]), itinerary("c", null, [toDenver])];
+  assertEqual(optionCost(itineraries), { total: 439.5, unpriced: 1, count: 3 });
+});
+
+test("selfTransfers finds connections between separate bookings", () => {
+  const first = itinerary("first", 120, [toDenver]);
+  const second = itinerary("second", 90, [denverToSfo]);
+  assertEqual(selfTransfers([first, second]), [{ itineraryId: "second", airport: "DEN", minutes: 70 }]);
+});
+
+test("selfTransfers ignores bookings that don't connect", () => {
+  assertEqual(selfTransfers([itinerary("out", 200, [outbound]), itinerary("back", 200, [back])]), []);
 });

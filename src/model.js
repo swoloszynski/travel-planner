@@ -71,3 +71,47 @@ export function routeText(legs) {
   }
   return stops.join(" → ");
 }
+
+function firstLeg(itinerary) {
+  return sortByDeparture(itinerary.legs)[0];
+}
+
+function lastLeg(itinerary) {
+  return sortByDeparture(itinerary.legs).at(-1);
+}
+
+// Itineraries in travel order. Ones without flights go last.
+export function sortItineraries(itineraries) {
+  const start = (it) => (it.legs.length ? departure(firstLeg(it)).toMillis() : Infinity);
+  return [...itineraries].sort((a, b) => start(a) - start(b));
+}
+
+export function optionCost(itineraries) {
+  const priced = itineraries.filter((it) => typeof it.price === "number");
+  return {
+    total: priced.reduce((sum, it) => sum + it.price, 0),
+    unpriced: itineraries.length - priced.length,
+    count: itineraries.length,
+  };
+}
+
+// Places where one itinerary's last flight connects to the next
+// itinerary's first. These are separate bookings, so the second airline
+// doesn't have to rebook the traveler if the first flight is late.
+// Takes itineraries in travel order.
+export function selfTransfers(itineraries) {
+  const transfers = [];
+  for (let i = 1; i < itineraries.length; i++) {
+    const [previous, next] = [itineraries[i - 1], itineraries[i]];
+    if (!previous.legs.length || !next.legs.length) continue;
+    const [landing, takeoff] = [lastLeg(previous), firstLeg(next)];
+    if (isConnection(landing, takeoff)) {
+      transfers.push({
+        itineraryId: next.id,
+        airport: landing.to,
+        minutes: minutesBetween(arrival(landing), departure(takeoff)),
+      });
+    }
+  }
+  return transfers;
+}
