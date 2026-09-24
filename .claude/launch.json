@@ -1,0 +1,15 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "travel-planner",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": [
+        "-c",
+        "python3 -m http.server 5173"
+      ],
+      "port": 5173,
+      "autoPort": false
+    }
+  ]
+}
