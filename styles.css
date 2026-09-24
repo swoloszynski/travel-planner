@@ -268,11 +268,6 @@ button.link.danger {
   color: var(--pico-del-color);
 }
 
-#paste-dialog output {
-  display: block;
-  font-size: 0.875rem;
-}
-
 dialog legend {
   font-weight: 600;
 }
@@ -335,4 +330,24 @@ dialog legend {
 .hint {
   font-size: 0.875rem;
   color: var(--pico-muted-color);
+}
+
+/* Inline flight editor */
+
+.flight-editor {
+  margin: var(--pico-spacing) 0;
+  padding: var(--pico-spacing);
+  border: 1px solid var(--pico-muted-border-color);
+  border-radius: var(--pico-border-radius);
+}
+
+.flight-fields legend {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-weight: 600;
+}
+
+.flight-editor .grid {
+  grid-template-columns: 1fr 1fr;
 }

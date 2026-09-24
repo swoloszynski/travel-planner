@@ -78,55 +78,6 @@
   <div id="calendar"></div>
 </main>
 
-<dialog id="paste-dialog">
-  <article>
-    <h2></h2>
-    <form method="dialog" id="paste-form">
-      <label>
-        Text copied from Google Flights
-        <textarea name="text" rows="8" placeholder="Mon, Oct 5&#10;Delta&#10;6:00 AM – 9:32 AM&#10;JFK–LAX&#10;$289"></textarea>
-      </label>
-      <output></output>
-    </form>
-    <footer>
-      <button type="button" class="secondary" data-close>Cancel</button>
-      <button form="paste-form" value="add">Add flights</button>
-    </footer>
-  </article>
-</dialog>
-
-<dialog id="flight-dialog">
-  <article>
-    <h2></h2>
-    <form method="dialog" id="flight-form">
-      <div class="grid">
-        <label>Airline <input name="airline" placeholder="Delta"></label>
-        <label>Flight number <input name="flightNumber" placeholder="DL 123"></label>
-      </div>
-      <fieldset>
-        <legend>Leaves</legend>
-        <div class="grid">
-          <label>Airport <input name="from" list="airports" placeholder="JFK" maxlength="4" required></label>
-          <label>Timezone <input name="fromTz" list="timezones" placeholder="America/New_York" required></label>
-        </div>
-        <label>Local time <input type="datetime-local" name="departs" required></label>
-      </fieldset>
-      <fieldset>
-        <legend>Lands</legend>
-        <div class="grid">
-          <label>Airport <input name="to" list="airports" placeholder="LAX" maxlength="4" required></label>
-          <label>Timezone <input name="toTz" list="timezones" placeholder="America/Los_Angeles" required></label>
-        </div>
-        <label>Local time <input type="datetime-local" name="arrives" required></label>
-      </fieldset>
-    </form>
-    <footer>
-      <button type="button" class="secondary" data-close>Cancel</button>
-      <button form="flight-form" value="save"></button>
-    </footer>
-  </article>
-</dialog>
-
 <dialog id="settings-dialog">
   <article>
     <h2>Settings</h2>

@@ -23,12 +23,12 @@ export function showDialog(dialog) {
 on(document, "click", "dialog [data-close]", (button) => button.closest("dialog").close());
 
 // Replaces an element's contents. If something inside had focus, focuses
-// its replacement, matched by data-action and data-id.
+// its replacement: the element with the same data attributes.
 export function redraw(element, content) {
-  const focused = element.contains(document.activeElement) ? document.activeElement.dataset : null;
+  const focused = element.contains(document.activeElement) ? document.activeElement.dataset : {};
   element.innerHTML = content;
-  if (focused?.action) {
-    const selector = `[data-action="${focused.action}"]` + (focused.id ? `[data-id="${focused.id}"]` : "");
-    element.querySelector(selector)?.focus();
-  }
+  const selector = Object.entries(focused)
+    .map(([key, value]) => `[data-${key.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`)}="${CSS.escape(value)}"]`)
+    .join("");
+  if (selector) element.querySelector(selector)?.focus();
 }

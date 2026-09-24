@@ -2,14 +2,11 @@
 import { state, commit, onChange, render } from "../app.js";
 import {
   activeTrip,
-  addItinerary,
-  addLeg,
   addOption,
   deleteItinerary,
   deleteLeg,
   deleteOption,
   findItinerary,
-  findLeg,
   mergeItineraries,
   nextOptionName,
 } from "../state.js";
@@ -21,15 +18,13 @@ import {
   flightMinutes,
   minutesBetween,
   optionCost,
-  sortByDeparture,
 } from "../model.js";
 import { describeOption } from "../describe.js";
 import { formatDate, formatDuration, formatPrice, formatTime, parsePrice } from "../format.js";
 import { html } from "../html.js";
 import { on, redraw } from "./dom.js";
 import { askText, confirmDelete, tell } from "./ask.js";
-import { editFlight } from "./flight-dialog.js";
-import { pasteFlights } from "./paste-dialog.js";
+import { addBooking, addToItinerary, editLeg, editorAt, editorDrawn } from "./flight-editor.js";
 
 const list = document.getElementById("option-list");
 const detail = document.getElementById("option-detail");
@@ -57,6 +52,7 @@ onChange(() => {
   const chosen = chosenOption();
   redraw(list, html`${activeTrip(state).options.map((option) => optionRow(option, option === chosen))}`);
   redraw(detail, optionDetail(describeOption(chosen, state.settings)));
+  editorDrawn(detail);
 });
 
 // Drawing
@@ -102,12 +98,12 @@ function optionDetail(option) {
       </hgroup>
       <strong>${cost.count ? costText(cost) : ""}</strong>
     </header>
+    ${editorAt("option", option.id) ??
+    html`<p><button data-action="add-booking" data-id="${option.id}">Add flights</button></p>`}
     ${option.itineraries.length
       ? html`<ol class="itineraries">${option.itineraries.map(itineraryCard)}</ol>`
       : html`<p class="empty">No flights yet.</p>`}
     <footer class="actions">
-      <button data-action="paste-flights" data-id="${option.id}">Paste flights</button>
-      <button class="secondary" data-action="add-itinerary" data-id="${option.id}">Add flight</button>
       <button class="secondary outline" data-action="rename-option" data-id="${option.id}">Rename</button>
       <button class="secondary outline" data-action="delete-option" data-id="${option.id}">Delete option</button>
     </footer>`;
@@ -140,6 +136,7 @@ function itineraryCard(itinerary, index, all) {
         </label>
       </div>
       ${directions.map((direction, i) => directionBlock(direction, directionName(kind, directions.length, i)))}
+      ${editorAt("itinerary", id)}
       <footer class="itinerary-actions">
         <button class="link" data-action="add-flight" data-id="${id}">Add flight</button>
         ${others.length > 0 &&
@@ -180,6 +177,8 @@ function directionBlock(direction, name) {
 }
 
 function legRow(leg) {
+  const editor = editorAt("leg", leg.id);
+  if (editor) return editor;
   const days = dayChange(leg);
   const carrier = [leg.airline, leg.flightNumber].filter(Boolean).join(" ") || "Flight";
   return html`
@@ -257,30 +256,9 @@ const actions = {
     });
   },
 
-  async "paste-flights"(id) {
-    const found = await pasteFlights(findOption(id).name);
-    if (found) commit(() => addItinerary(findOption(id), found.legs, found.price));
-  },
-
-  async "add-itinerary"(id) {
-    const leg = await editFlight({}, { heading: "Add a flight", saveLabel: "Add flight" });
-    if (leg) commit(() => addItinerary(findOption(id), [leg]));
-  },
-
-  // Starts from where the itinerary's last flight lands.
-  async "add-flight"(id) {
-    const { itinerary } = findItinerary(activeTrip(state), id);
-    const last = sortByDeparture(itinerary.legs).at(-1);
-    const start = { from: last.to, fromTz: last.toTz };
-    const leg = await editFlight(start, { heading: "Add a flight to this booking", saveLabel: "Add flight" });
-    if (leg) commit(() => addLeg(itinerary, leg));
-  },
-
-  async "edit-leg"(id) {
-    const { leg } = findLeg(activeTrip(state), id);
-    const changes = await editFlight(leg, { heading: "Edit flight", saveLabel: "Save" });
-    if (changes) commit(() => Object.assign(leg, changes));
-  },
+  "add-booking": addBooking,
+  "add-flight": addToItinerary,
+  "edit-leg": editLeg,
 
   "delete-leg"(id) {
     commit(() => deleteLeg(activeTrip(state), id));
