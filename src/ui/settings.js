@@ -1,7 +1,8 @@
 // The settings dialog. Each field is named after the setting it edits.
 import { state, commit } from "../app.js";
 import { applySettings } from "../calendar.js";
-import { isCurrency, isTimezone } from "../format.js";
+import { isCurrency } from "../format.js";
+import { findTimezone } from "../timezones.js";
 import { showDialog } from "./dom.js";
 
 const dialog = document.getElementById("settings-dialog");
@@ -30,9 +31,12 @@ document.getElementById("open-settings").addEventListener("click", async () => {
   applySettings();
 });
 
+const EXTRA_ZONES = ["extraTimezone1", "extraTimezone2"];
+const TIMEZONE_FIELDS = ["displayTz", "sleepTz", ...EXTRA_ZONES];
+
 function fill(settings) {
   PLAIN.forEach((name) => (fields[name].value = settings[name]));
-  fields.extraTimezones.value = settings.extraTimezones.join(", ");
+  EXTRA_ZONES.forEach((name, i) => (fields[name].value = settings.extraTimezones[i] ?? ""));
   fields.sleepEnabled.checked = settings.sleepEnabled;
   check();
 }
@@ -41,16 +45,11 @@ function read() {
   const settings = Object.fromEntries(PLAIN.map((name) => [name, fields[name].value.trim()]));
   NUMBERS.forEach((name) => (settings[name] = Number(settings[name])));
   settings.currency = settings.currency.toUpperCase();
-  settings.extraTimezones = extraTimezones();
+  settings.displayTz = findTimezone(settings.displayTz);
+  settings.sleepTz = findTimezone(settings.sleepTz) ?? state.settings.sleepTz;
+  settings.extraTimezones = EXTRA_ZONES.map((name) => findTimezone(fields[name].value)).filter(Boolean);
   settings.sleepEnabled = fields.sleepEnabled.checked;
   return settings;
-}
-
-function extraTimezones() {
-  return fields.extraTimezones.value
-    .split(",")
-    .map((zone) => zone.trim())
-    .filter(Boolean);
 }
 
 form.addEventListener("input", check);
@@ -59,11 +58,13 @@ function check() {
   const problem = (input, message) => input.setCustomValidity(message);
   const sleeping = fields.sleepEnabled.checked;
 
-  problem(fields.displayTz, isTimezone(fields.displayTz.value) ? "" : "Pick a timezone from the list.");
-  const unknown = extraTimezones().filter((zone) => !isTimezone(zone));
-  problem(fields.extraTimezones, unknown.length ? `Unknown timezone: ${unknown.join(", ")}` : "");
+  for (const name of TIMEZONE_FIELDS) {
+    const input = fields[name];
+    const optional = EXTRA_ZONES.includes(name) || (name === "sleepTz" && !sleeping);
+    const fine = (optional && !input.value.trim()) || findTimezone(input.value);
+    problem(input, fine ? "" : "Unknown timezone. Try a city, like Chicago.");
+  }
   problem(fields.currency, isCurrency(fields.currency.value) ? "" : "Use a three-letter code, like USD.");
-  problem(fields.sleepTz, !sleeping || isTimezone(fields.sleepTz.value) ? "" : "Pick a timezone from the list.");
   const sameTimes = sleeping && fields.sleepStart.value === fields.sleepEnd.value;
   problem(fields.sleepEnd, sameTimes ? "Wake-up time has to differ from bedtime." : "");
 }

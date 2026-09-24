@@ -134,11 +134,10 @@
           Show times in this timezone
           <input name="displayTz" list="timezones" required>
         </label>
-        <label>
-          Also label times in these timezones
-          <input name="extraTimezones" list="timezones" placeholder="America/Los_Angeles, Europe/London">
-          <small>Separate them with commas.</small>
-        </label>
+        <div class="grid">
+          <label>Also label times in <input name="extraTimezone1" list="timezones" placeholder="Los Angeles"></label>
+          <label>and in <input name="extraTimezone2" list="timezones" placeholder="London"></label>
+        </div>
         <div class="grid">
           <label>Days to show <input type="number" name="daysToShow" min="1" max="7" required></label>
           <label>

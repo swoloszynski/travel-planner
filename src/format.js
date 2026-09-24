@@ -1,5 +1,4 @@
 // Turning numbers and times into text, and checking text typed in.
-import { DateTime } from "luxon";
 
 export function formatDuration(minutes) {
   const hours = Math.floor(minutes / 60);
@@ -31,10 +30,6 @@ export function isCurrency(code) {
   } catch {
     return false;
   }
-}
-
-export function isTimezone(zone) {
-  return Boolean(zone) && DateTime.local().setZone(zone).isValid;
 }
 
 export function formatDate(dateTime) {

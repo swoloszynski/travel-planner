@@ -1,7 +1,7 @@
 // Adding or editing one flight by hand.
 import { findAirport } from "../data/airports.js";
 import { arrival, departure } from "../model.js";
-import { isTimezone } from "../format.js";
+import { findTimezone } from "../timezones.js";
 import { showDialog } from "./dom.js";
 
 const dialog = document.getElementById("flight-dialog");
@@ -21,7 +21,12 @@ export async function editFlight(leg, { heading, saveLabel }) {
   save.textContent = saveLabel;
   check();
   if ((await showDialog(dialog)) !== "save") return null;
-  return Object.fromEntries(NAMES.map((name) => [name, fields[name].value.trim()]));
+  return typed();
+}
+
+function typed() {
+  const leg = Object.fromEntries(NAMES.map((name) => [name, fields[name].value.trim()]));
+  return { ...leg, fromTz: findTimezone(leg.fromTz) ?? "", toTz: findTimezone(leg.toTz) ?? "" };
 }
 
 // Typing a known airport code fills in its timezone.
@@ -39,10 +44,11 @@ form.addEventListener("input", check);
 function check() {
   for (const name of ["fromTz", "toTz"]) {
     const input = fields[name];
-    input.setCustomValidity(input.value && !isTimezone(input.value) ? "Pick a timezone from the list." : "");
+    const unknown = input.value && !findTimezone(input.value);
+    input.setCustomValidity(unknown ? "Unknown timezone. Try a city, like Chicago." : "");
   }
-  const leg = Object.fromEntries(NAMES.map((name) => [name, fields[name].value]));
-  const complete = leg.departs && leg.arrives && isTimezone(leg.fromTz) && isTimezone(leg.toTz);
+  const leg = typed();
+  const complete = leg.departs && leg.arrives && leg.fromTz && leg.toTz;
   const backwards = complete && arrival(leg) <= departure(leg);
   fields.arrives.setCustomValidity(backwards ? "The flight has to land after it leaves." : "");
 }

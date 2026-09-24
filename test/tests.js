@@ -5,6 +5,7 @@ import "./sleep.test.js";
 import "./parse.test.js";
 import "./describe.test.js";
 import "./format.test.js";
+import "./timezones.test.js";
 import "./html.test.js";
 import "./state.test.js";
 import "./storage.test.js";
