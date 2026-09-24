@@ -18,6 +18,7 @@
     <ul><li><strong>Travel Planner</strong></li></ul>
     <ul>
       <li><small id="status" role="status"></small></li>
+      <li><button class="small" id="folder-reconnect" hidden></button></li>
       <li>
         <a class="button" href="https://www.google.com/travel/flights" target="_blank" rel="noopener">
           Open Google Flights ↗
@@ -131,6 +132,15 @@
         Currency
         <input name="currency" maxlength="3" placeholder="USD" required>
       </label>
+      <fieldset>
+        <legend>Storage</legend>
+        <p id="folder-status" class="hint"></p>
+        <div class="actions">
+          <button type="button" class="secondary" id="folder-choose">Choose a folder…</button>
+          <button type="button" class="secondary outline" id="folder-stop"
+            data-confirm="Click again to stop saving to the folder">Stop</button>
+        </div>
+      </fieldset>
       <fieldset>
         <legend>Google Calendar</legend>
         <p id="google-status"></p>
