@@ -20,9 +20,11 @@ import {
 } from "../model.js";
 import { describeOption } from "../describe.js";
 import { googleFlightsSearches } from "../google-flights.js";
+import { bookingText } from "../booking-text.js";
 import { formatDate, formatDuration, formatPrice, formatTime, parsePrice } from "../format.js";
 import { html } from "../html.js";
 import { confirmed, on, redraw } from "./dom.js";
+import { say } from "./status.js";
 import { chooseOption, chosenOption } from "./chosen.js";
 import { addToBooking } from "./add-flights.js";
 import { editLeg, legEditor, legEditorDrawn } from "./leg-editor.js";
@@ -123,6 +125,7 @@ function itineraryCard(itinerary, index, all) {
       ${directions.map((direction, i) => directionBlock(direction, directionName(kind, directions.length, i)))}
       <footer class="itinerary-actions">
         <button class="link" data-action="add-flight" data-id="${id}">+ Add flight</button>
+        <button class="link" data-action="copy-booking" data-id="${id}">Copy flights</button>
         ${googleFlightsSearches(itinerary.legs).map(
           ({ label, url }) => html`<a class="link" href="${url}" target="_blank" rel="noopener">${label} ↗</a>`
         )}
@@ -242,6 +245,18 @@ const actions = {
   },
 
   "edit-leg": editLeg,
+
+  // Copies the booking in a form Add flights can read, to add it to
+  // another option.
+  async "copy-booking"(id) {
+    const { itinerary } = findItinerary(activeTrip(state), id);
+    try {
+      await navigator.clipboard.writeText(bookingText(itinerary, state.settings.currency));
+      say("Copied. Paste into Add flights, then choose Fill in from paste.");
+    } catch {
+      say("Couldn't copy to the clipboard.");
+    }
+  },
 
   "delete-leg"(id) {
     commit(() => deleteLeg(activeTrip(state), id));

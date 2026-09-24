@@ -12,5 +12,6 @@ import "./storage.test.js";
 import "./sync.test.js";
 import "./events.test.js";
 import "./google-flights.test.js";
+import "./booking-text.test.js";
 
 run();
