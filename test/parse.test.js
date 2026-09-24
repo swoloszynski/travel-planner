@@ -12,6 +12,7 @@ const fixtures = [
   "date-line",
   "next-year",
   "unknown-airport",
+  "depart-arrive",
 ];
 
 for (const name of fixtures) {

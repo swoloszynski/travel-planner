@@ -1,0 +1,6 @@
+Frontier F9 1234
+Depart ATL 2026-10-22 15:49h ET
+Arrive LAX 2026-10-22 17:42h PT
+Frontier F9 2210
+Depart LAX 2026-10-25 08:05h PT
+Arrive ATL 2026-10-25 15:20h ET

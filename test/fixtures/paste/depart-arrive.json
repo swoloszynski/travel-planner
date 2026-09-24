@@ -1,0 +1,7 @@
+{
+  "legs": [
+    { "airline": "Frontier", "flightNumber": "F9 1234", "from": "ATL", "fromTz": "America/New_York", "departs": "2026-10-22T15:49", "to": "LAX", "toTz": "America/Los_Angeles", "arrives": "2026-10-22T17:42" },
+    { "airline": "Frontier", "flightNumber": "F9 2210", "from": "LAX", "fromTz": "America/Los_Angeles", "departs": "2026-10-25T08:05", "to": "ATL", "toTz": "America/New_York", "arrives": "2026-10-25T15:20" }
+  ],
+  "price": null
+}
