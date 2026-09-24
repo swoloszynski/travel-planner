@@ -51,6 +51,23 @@
   <div id="calendar"></div>
 </main>
 
+<dialog id="paste-dialog">
+  <article>
+    <h2></h2>
+    <form method="dialog" id="paste-form">
+      <label>
+        Text copied from Google Flights
+        <textarea name="text" rows="8" placeholder="Mon, Oct 5&#10;Delta&#10;6:00 AM – 9:32 AM&#10;JFK–LAX&#10;$289"></textarea>
+      </label>
+      <output></output>
+    </form>
+    <footer>
+      <button type="button" class="secondary" data-close>Cancel</button>
+      <button form="paste-form" value="add">Add flights</button>
+    </footer>
+  </article>
+</dialog>
+
 <dialog id="flight-dialog">
   <article>
     <h2></h2>

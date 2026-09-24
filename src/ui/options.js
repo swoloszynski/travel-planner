@@ -29,6 +29,7 @@ import { html } from "../html.js";
 import { on, redraw } from "./dom.js";
 import { askText, confirmDelete, tell } from "./ask.js";
 import { editFlight } from "./flight-dialog.js";
+import { pasteFlights } from "./paste-dialog.js";
 
 const list = document.getElementById("option-list");
 const detail = document.getElementById("option-detail");
@@ -105,6 +106,7 @@ function optionDetail(option) {
       ? html`<ol class="itineraries">${option.itineraries.map(itineraryCard)}</ol>`
       : html`<p class="empty">No flights yet.</p>`}
     <footer class="actions">
+      <button data-action="paste-flights" data-id="${option.id}">Paste flights</button>
       <button class="secondary" data-action="add-itinerary" data-id="${option.id}">Add flight</button>
       <button class="secondary outline" data-action="rename-option" data-id="${option.id}">Rename</button>
       <button class="secondary outline" data-action="delete-option" data-id="${option.id}">Delete option</button>
@@ -253,6 +255,11 @@ const actions = {
       const { option } = findItinerary(activeTrip(state), id);
       deleteItinerary(option, id);
     });
+  },
+
+  async "paste-flights"(id) {
+    const found = await pasteFlights(findOption(id).name);
+    if (found) commit(() => addItinerary(findOption(id), found.legs, found.price));
   },
 
   async "add-itinerary"(id) {
