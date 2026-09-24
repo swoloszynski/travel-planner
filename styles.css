@@ -71,3 +71,138 @@
 dialog h2 {
   font-size: 1.25rem;
 }
+
+.sidebar h2 {
+  font-size: 1.25rem;
+}
+
+.sidebar hgroup p {
+  font-size: 0.875rem;
+}
+
+/* Options */
+
+.option-list {
+  padding: 0;
+}
+
+.option-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  list-style: none;
+  padding: 0.5rem 0.75rem;
+  border-left: 4px solid var(--option-color);
+  border-radius: var(--pico-border-radius);
+}
+
+.option-list li[aria-current="true"] {
+  background: var(--pico-card-sectioning-background-color);
+}
+
+.option-list input {
+  margin: 0;
+}
+
+.option-list input[type="color"] {
+  width: 2rem;
+  height: 2rem;
+  padding: 0.125rem;
+}
+
+.option-name {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0;
+  padding: 0.25rem 0;
+  border: 0;
+  background: none;
+  color: var(--pico-color);
+  text-align: left;
+}
+
+.option-name small {
+  color: var(--pico-muted-color);
+}
+
+/* The chosen option's itineraries */
+
+.option-detail > header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 1rem;
+  border-top: 4px solid var(--option-color);
+}
+
+.option-detail > header hgroup {
+  margin: 0;
+}
+
+.itineraries {
+  padding: 0;
+}
+
+.itinerary {
+  list-style: none;
+  padding: var(--pico-spacing) 0;
+  border-bottom: 1px solid var(--pico-muted-border-color);
+}
+
+.itinerary-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 1rem;
+}
+
+.itinerary h3 {
+  font-size: 1.125rem;
+}
+
+.itinerary hgroup p {
+  font-size: 0.875rem;
+}
+
+.direction {
+  margin: var(--pico-spacing) 0 0;
+}
+
+.direction h4 {
+  font-size: 0.875rem;
+  font-weight: normal;
+  color: var(--pico-muted-color);
+}
+
+.leg p {
+  margin: 0;
+}
+
+.leg-about,
+.layover {
+  font-size: 0.875rem;
+  color: var(--pico-muted-color);
+}
+
+.layover {
+  margin: 0.5rem 0;
+  padding-left: 1rem;
+  border-left: 2px dashed var(--pico-muted-border-color);
+}
+
+.warning {
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  border-radius: var(--pico-border-radius);
+  background: color-mix(in srgb, #d97706 15%, transparent);
+}
+
+.sleep-note::before {
+  content: "☾ ";
+}
+
+.empty {
+  color: var(--pico-muted-color);
+}

@@ -2,5 +2,6 @@
 import { render } from "./app.js";
 import "./calendar.js";
 import "./ui/trips.js";
+import "./ui/options.js";
 
 render();

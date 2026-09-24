@@ -8,6 +8,7 @@ import {
   sortItineraries,
   optionCost,
   selfTransfers,
+  dayChange,
 } from "../src/model.js";
 
 const outbound = flight("JFK 2026-10-05 06:00", "LAX 2026-10-05 09:32");
@@ -71,4 +72,11 @@ test("selfTransfers finds connections between separate bookings", () => {
 
 test("selfTransfers ignores bookings that don't connect", () => {
   assertEqual(selfTransfers([itinerary("out", 200, [outbound]), itinerary("back", 200, [back])]), []);
+});
+
+test("dayChange shows when a flight lands on a different date", () => {
+  const redEye = flight("SFO 2026-10-10 22:30", "JFK 2026-10-11 06:45");
+  const fromTokyo = flight("NRT 2026-10-15 17:00", "LAX 2026-10-15 10:00");
+  const toTokyo = flight("LAX 2026-10-20 11:00", "NRT 2026-10-21 15:00");
+  assertEqual([dayChange(outbound), dayChange(redEye), dayChange(fromTokyo), dayChange(toTokyo)], [0, 1, 0, 1]);
 });

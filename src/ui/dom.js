@@ -21,3 +21,14 @@ export function showDialog(dialog) {
 
 // Buttons marked data-close cancel the dialog they're in.
 on(document, "click", "dialog [data-close]", (button) => button.closest("dialog").close());
+
+// Replaces an element's contents. If something inside had focus, focuses
+// its replacement, matched by data-action and data-id.
+export function redraw(element, content) {
+  const focused = element.contains(document.activeElement) ? document.activeElement.dataset : null;
+  element.innerHTML = content;
+  if (focused?.action) {
+    const selector = `[data-action="${focused.action}"]` + (focused.id ? `[data-id="${focused.id}"]` : "");
+    element.querySelector(selector)?.focus();
+  }
+}

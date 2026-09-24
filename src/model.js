@@ -125,3 +125,10 @@ export function doorToDoor(direction, settings) {
     end: arrival(direction.at(-1)).plus({ minutes: minutesFromAirport }),
   };
 }
+
+// How many dates later, by the local calendars, a flight lands than it
+// leaves: 1 for a red-eye.
+export function dayChange(leg) {
+  const date = (localTime) => DateTime.fromISO(localTime.slice(0, 10));
+  return date(leg.arrives).diff(date(leg.departs), "days").days;
+}
