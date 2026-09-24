@@ -268,3 +268,28 @@ button.link.danger {
 dialog legend {
   font-weight: 600;
 }
+
+/* Google Calendar */
+
+.google-calendars {
+  padding: 0;
+}
+
+.google-calendars li {
+  list-style: none;
+}
+
+.swatch {
+  display: inline-block;
+  width: 0.75rem;
+  height: 0.75rem;
+  margin-right: 0.25rem;
+  border-radius: 2px;
+}
+
+.fc .google-event {
+  --fc-event-bg-color: var(--pico-card-sectioning-background-color);
+  --fc-event-border-color: var(--pico-muted-border-color);
+  --fc-event-text-color: var(--pico-muted-color);
+  font-style: italic;
+}

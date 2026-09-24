@@ -19,6 +19,7 @@ const PLAIN = [
   "sleepStart",
   "sleepEnd",
   "sleepTz",
+  "googleClientId",
 ];
 const NUMBERS = ["minutesToAirport", "minutesAtAirport", "minutesFromAirport", "daysToShow", "weekStart"];
 

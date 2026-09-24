@@ -10,6 +10,7 @@
   { "imports": { "luxon": "https://cdn.jsdelivr.net/npm/luxon@3.5.0/build/es6/luxon.js" } }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+<script src="https://accounts.google.com/gsi/client" async></script>
 <script type="module" src="src/main.js"></script>
 </head>
 <body>
@@ -70,6 +71,18 @@
     </article>
 
     <article id="option-detail" class="option-detail"></article>
+
+    <article id="google">
+      <hgroup>
+        <h2>Google Calendar</h2>
+        <p id="google-status"></p>
+      </hgroup>
+      <ul id="google-calendars" class="google-calendars"></ul>
+      <div class="actions">
+        <button class="secondary" id="google-connect">Connect Google Calendar</button>
+        <button class="secondary outline" id="google-disconnect">Disconnect</button>
+      </div>
+    </article>
   </aside>
   <div id="calendar"></div>
 </main>
@@ -178,6 +191,11 @@
       <label>
         Currency
         <input name="currency" maxlength="3" placeholder="USD" required>
+      </label>
+      <label>
+        Google OAuth client ID
+        <input name="googleClientId" placeholder="…apps.googleusercontent.com">
+        <small>For showing your Google Calendar. It only works on the web addresses the ID allows.</small>
       </label>
     </form>
     <footer>
