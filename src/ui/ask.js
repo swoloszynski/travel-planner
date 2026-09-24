@@ -27,8 +27,12 @@ export async function askText(heading, value = "") {
   return (await ask({ heading, value })) ? answer.value.trim() : null;
 }
 
+export function confirmAction(heading, text, okLabel) {
+  return ask({ heading, text, okLabel });
+}
+
 export function confirmDelete(heading, text) {
-  return ask({ heading, text, okLabel: "Delete" });
+  return confirmAction(heading, text, "Delete");
 }
 
 export async function tell(heading, text) {

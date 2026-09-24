@@ -17,6 +17,8 @@
   <nav>
     <ul><li><strong>Travel Planner</strong></li></ul>
     <ul>
+      <li><button class="secondary outline" id="export">Export</button></li>
+      <li><button class="secondary outline" id="import">Import</button></li>
       <li><button class="secondary outline" id="open-settings">Settings</button></li>
     </ul>
   </nav>
@@ -199,6 +201,7 @@
   </article>
 </dialog>
 
+<input type="file" id="import-file" accept="application/json" hidden>
 <datalist id="airports"></datalist>
 <datalist id="timezones"></datalist>
 </body>

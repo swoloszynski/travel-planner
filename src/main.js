@@ -6,5 +6,6 @@ import "./ui/trips.js";
 import "./ui/search.js";
 import "./ui/options.js";
 import "./ui/settings.js";
+import "./ui/backup.js";
 
 render();
