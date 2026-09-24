@@ -8,5 +8,6 @@ import "./format.test.js";
 import "./html.test.js";
 import "./state.test.js";
 import "./storage.test.js";
+import "./events.test.js";
 
 run();
