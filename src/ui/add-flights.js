@@ -115,7 +115,7 @@ function fillFromPaste() {
   const found = legs.length === 1 ? "1 flight" : `${legs.length} flights`;
   const at = priced ? ` at ${formatPrice(price, state.settings.currency)}` : "";
   draft.message =
-    `Filled in ${found}${at}. Check them below, then add.` +
+    `Filled in ${found}${at}. Check ${legs.length === 1 ? "it" : "them"} below, then add.` +
     (unknown.length ? ` Enter the timezone for ${unknown.join(" and ")}.` : "");
 }
 
