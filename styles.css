@@ -55,3 +55,19 @@
   white-space: nowrap;
   color: var(--pico-muted-color);
 }
+
+/* Sidebar */
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--pico-spacing);
+}
+
+.actions button {
+  margin-bottom: 0;
+}
+
+dialog h2 {
+  font-size: 1.25rem;
+}

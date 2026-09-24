@@ -20,8 +20,38 @@
 </header>
 
 <main class="container-fluid layout">
-  <aside class="sidebar"></aside>
+  <aside class="sidebar">
+    <article id="trip">
+      <label>
+        Trip
+        <select id="trip-picker"></select>
+      </label>
+      <label>
+        Starts on
+        <input type="date" id="trip-start">
+      </label>
+      <div class="actions">
+        <button class="secondary outline" data-action="rename-trip">Rename</button>
+        <button class="secondary outline" data-action="new-trip">New trip</button>
+        <button class="secondary outline" data-action="delete-trip">Delete</button>
+      </div>
+    </article>
+  </aside>
   <div id="calendar"></div>
 </main>
+
+<dialog id="ask">
+  <article>
+    <h2></h2>
+    <form method="dialog" id="ask-form">
+      <p></p>
+      <input name="answer" aria-label="Answer" required>
+    </form>
+    <footer>
+      <button type="button" class="secondary" data-close>Cancel</button>
+      <button form="ask-form" value="ok">OK</button>
+    </footer>
+  </article>
+</dialog>
 </body>
 </html>
