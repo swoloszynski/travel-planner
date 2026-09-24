@@ -2,6 +2,8 @@
 
 Compare flight options for a trip on a calendar.
 
+Use it at https://swoloszynski.github.io/travel-planner/.
+
 Plain HTML, CSS and JavaScript modules. There is no build step and nothing to install.
 
 ## Run
@@ -10,7 +12,7 @@ Plain HTML, CSS and JavaScript modules. There is no build step and nothing to in
 python3 serve.py
 ```
 
-Open http://localhost:5173.
+Open http://localhost:5173. Google Calendar sign-in only works from web addresses allowed on the OAuth client ID, such as this one and the GitHub Pages address.
 
 ## Storage
 
