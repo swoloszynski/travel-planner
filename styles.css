@@ -228,6 +228,8 @@ dialog h2 {
   grid-column: 2;
   grid-row: 1 / 3;
   align-self: center;
+  display: flex;
+  gap: 1rem;
 }
 
 .itinerary-actions {

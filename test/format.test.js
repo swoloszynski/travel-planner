@@ -1,5 +1,5 @@
 import { test, assertEqual } from "./runner.js";
-import { formatDuration, formatPrice, parsePrice, isCurrency } from "../src/format.js";
+import { formatDuration, formatPrice, parsePrice, isCurrency, isTimezone } from "../src/format.js";
 
 test("formatDuration shows hours and minutes", () => {
   assertEqual(formatDuration(392), "6h 32m");
@@ -25,4 +25,10 @@ test("isCurrency accepts ISO codes only", () => {
 
 test("formatPrice falls back to a plain number for an unknown currency", () => {
   assertEqual(formatPrice(289, "DOLLARS"), "289.00");
+});
+
+test("isTimezone accepts IANA zone names only", () => {
+  assertEqual(isTimezone("Asia/Tokyo"), true);
+  assertEqual(isTimezone("Tokyo"), false);
+  assertEqual(isTimezone(""), false);
 });
