@@ -13,6 +13,7 @@ const fixtures = [
   "next-year",
   "unknown-airport",
   "depart-arrive",
+  "time-then-code",
 ];
 
 for (const name of fixtures) {
@@ -25,4 +26,11 @@ for (const name of fixtures) {
 
 test("parseFlights finds nothing in unrelated text", () => {
   assertEqual(parseFlights("Remember to pack a charger", today), { legs: [], price: null });
+});
+
+test("parseFlights doesn't read a line starting with a weekday name as a date", () => {
+  const text = "Fri, Nov 6\nSun Country\n6:00 AM – 7:55 AM\nMSP–LAS\n$120";
+  assertEqual(parseFlights(text, today).legs.map((leg) => [leg.airline, leg.departs]), [
+    ["Sun Country", "2026-11-06T06:00"],
+  ]);
 });

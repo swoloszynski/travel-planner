@@ -3,7 +3,7 @@
 // Text copied out of Google Flights varies with the part of the page it
 // came from. Rather than match one layout, this relies on two things that
 // hold across the formats seen so far:
-//   1. A date line ("Thu, Oct 8") starts a new direction.
+//   1. A date line ("Thu, Oct 8" or "Oct 8") starts a new direction.
 //   2. Within a direction, times and airport codes appear in the same
 //      order: departure, arrival, departure, arrival, and so on.
 //
@@ -16,10 +16,12 @@ import { findAirport } from "./data/airports.js";
 import { AIRLINES } from "./data/airlines.js";
 
 const MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
-const DATE_LINE = /^(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun)[a-z]*\.?,?\s+([a-z]{3})[a-z]*\.?\s+(\d{1,2})\b/i;
+const DATE_LINE =
+  /^(?:(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun)[a-z]*\.?,?\s+)?(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+(\d{1,2})\b/i;
 const TIME = /(\d{1,2}):(\d{2})\s?([AP]M)/gi;
 const CODE_IN_PARENS = /\(([A-Z]{3})\)/g;
 const CODE_PAIR = /\b([A-Z]{3})\s*[–—-]\s*([A-Z]{3})\b/g;
+const CODE_AFTER_TIME = /\d{1,2}:\d{2}\s?[AaPp][Mm]\s*([A-Z]{3})\b/g;
 // "UA 1432", but not the "AM 12" in "9:32 AM 12".
 const FLIGHT_NUMBER = /(?<!\d:\d\d\s?)\b([A-Z][A-Z0-9])\s?(\d{1,4})\b/g;
 // The zone abbreviation after the time is ignored in favor of the airport's.
@@ -118,12 +120,15 @@ function airlineNameIn(text) {
   return AIRLINE_NAMES.find((name) => new RegExp(`\\b${name}\\b`, "i").test(text)) ?? "";
 }
 
-// Detailed views show "Denver International Airport (DEN)"; summaries
-// show "JFK–LAX".
+// Detailed views show "Denver International Airport (DEN)", summaries
+// show "JFK–LAX", and shorter copies put the code after each time:
+// "12:40 PM LGA". The first of these that finds a pair of codes is used.
 function airportCodes(text) {
-  const inParens = [...text.matchAll(CODE_IN_PARENS)].map((m) => m[1]);
-  if (inParens.length >= 2) return inParens;
-  return [...text.matchAll(CODE_PAIR)].flatMap((m) => [m[1], m[2]]);
+  for (const pattern of [CODE_IN_PARENS, CODE_PAIR, CODE_AFTER_TIME]) {
+    const codes = [...text.matchAll(pattern)].flatMap((match) => match.slice(1));
+    if (codes.length >= 2) return codes;
+  }
+  return [];
 }
 
 // An unknown airport's times are read as UTC. They still come out right
