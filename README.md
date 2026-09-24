@@ -7,7 +7,7 @@ Plain HTML, CSS and JavaScript modules. There is no build step and nothing to in
 ## Run
 
 ```bash
-python3 -m http.server 5173
+python3 serve.py
 ```
 
 Open http://localhost:5173.

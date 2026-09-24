@@ -3,11 +3,8 @@
   "configurations": [
     {
       "name": "travel-planner",
-      "runtimeExecutable": "sh",
-      "runtimeArgs": [
-        "-c",
-        "python3 -m http.server 5173"
-      ],
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["serve.py"],
       "port": 5173,
       "autoPort": false
     }
