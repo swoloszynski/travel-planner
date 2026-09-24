@@ -4,5 +4,6 @@ import "./model.test.js";
 import "./sleep.test.js";
 import "./parse.test.js";
 import "./describe.test.js";
+import "./format.test.js";
 
 run();
