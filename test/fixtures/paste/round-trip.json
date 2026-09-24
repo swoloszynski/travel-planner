@@ -1,0 +1,7 @@
+{
+  "legs": [
+    { "airline": "JetBlue", "flightNumber": "", "from": "JFK", "fromTz": "America/New_York", "departs": "2026-10-05T08:00", "to": "LAX", "toTz": "America/Los_Angeles", "arrives": "2026-10-05T11:25" },
+    { "airline": "JetBlue", "flightNumber": "", "from": "LAX", "fromTz": "America/Los_Angeles", "departs": "2026-10-12T13:00", "to": "JFK", "toTz": "America/New_York", "arrives": "2026-10-12T21:30" }
+  ],
+  "price": 412
+}

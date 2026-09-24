@@ -1,0 +1,6 @@
+{
+  "legs": [
+    { "airline": "ANA", "flightNumber": "", "from": "NRT", "fromTz": "Asia/Tokyo", "departs": "2026-10-15T17:00", "to": "LAX", "toTz": "America/Los_Angeles", "arrives": "2026-10-15T10:00" }
+  ],
+  "price": 1204
+}

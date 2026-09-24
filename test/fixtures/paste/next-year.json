@@ -1,0 +1,6 @@
+{
+  "legs": [
+    { "airline": "United", "flightNumber": "", "from": "EWR", "fromTz": "America/New_York", "departs": "2027-01-12T06:10", "to": "MCO", "toTz": "America/New_York", "arrives": "2027-01-12T09:05" }
+  ],
+  "price": 129
+}

@@ -1,0 +1,6 @@
+{
+  "legs": [
+    { "airline": "Alaska", "flightNumber": "", "from": "SFO", "fromTz": "America/Los_Angeles", "departs": "2026-10-10T22:30", "to": "JFK", "toTz": "America/New_York", "arrives": "2026-10-11T06:45" }
+  ],
+  "price": 198
+}

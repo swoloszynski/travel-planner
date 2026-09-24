@@ -1,0 +1,6 @@
+{
+  "legs": [
+    { "airline": "Delta", "flightNumber": "", "from": "JFK", "fromTz": "America/New_York", "departs": "2026-10-05T06:00", "to": "LAX", "toTz": "America/Los_Angeles", "arrives": "2026-10-05T09:32" }
+  ],
+  "price": 289
+}

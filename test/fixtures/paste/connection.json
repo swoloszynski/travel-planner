@@ -1,0 +1,7 @@
+{
+  "legs": [
+    { "airline": "United", "flightNumber": "UA 1432", "from": "LGA", "fromTz": "America/New_York", "departs": "2026-10-08T07:15", "to": "DEN", "toTz": "America/Denver", "arrives": "2026-10-08T09:05" },
+    { "airline": "United", "flightNumber": "UA 588", "from": "DEN", "fromTz": "America/Denver", "departs": "2026-10-08T10:15", "to": "SFO", "toTz": "America/Los_Angeles", "arrives": "2026-10-08T11:45" }
+  ],
+  "price": 412
+}

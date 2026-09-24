@@ -1,0 +1,6 @@
+{
+  "legs": [
+    { "airline": "American", "flightNumber": "", "from": "XNA", "fromTz": "", "departs": "2026-11-20T06:00", "to": "ORD", "toTz": "America/Chicago", "arrives": "2026-11-20T07:45" }
+  ],
+  "price": 218
+}
