@@ -351,3 +351,28 @@ dialog legend {
 .flight-editor .grid {
   grid-template-columns: 1fr 1fr;
 }
+
+/* Names edited in place */
+
+.trip-picker {
+  margin-bottom: var(--pico-spacing);
+}
+
+.trip-picker select,
+.trip-picker [role="group"] {
+  margin-bottom: 0;
+}
+
+.option-name-input {
+  margin: 0;
+  padding: 0.125rem 0.25rem;
+  border-color: transparent;
+  background: transparent;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.option-name-input:hover,
+.option-name-input:focus {
+  border-color: var(--pico-form-element-border-color);
+}

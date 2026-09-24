@@ -8,7 +8,6 @@ import {
   deleteOption,
   findItinerary,
   mergeItineraries,
-  nextOptionName,
 } from "../state.js";
 import {
   KIND_LABELS,
@@ -23,7 +22,7 @@ import { describeOption } from "../describe.js";
 import { formatDate, formatDuration, formatPrice, formatTime, parsePrice } from "../format.js";
 import { html } from "../html.js";
 import { on, redraw } from "./dom.js";
-import { askText, confirmDelete, tell } from "./ask.js";
+import { confirmDelete, tell } from "./ask.js";
 import { addBooking, addToItinerary, editLeg, editorAt, editorDrawn } from "./flight-editor.js";
 
 const list = document.getElementById("option-list");
@@ -93,7 +92,8 @@ function optionDetail(option) {
   return html`
     <header style="--option-color: ${option.color}">
       <hgroup>
-        <h2>${option.name}</h2>
+        <input class="option-name-input" data-action="rename-option" data-id="${option.id}" value="${option.name}"
+          aria-label="Option name" title="Click to rename">
         <p>${notes.join(" · ")}</p>
       </hgroup>
       <strong>${cost.count ? costText(cost) : ""}</strong>
@@ -104,7 +104,6 @@ function optionDetail(option) {
       ? html`<ol class="itineraries">${option.itineraries.map(itineraryCard)}</ol>`
       : html`<p class="empty">No flights yet.</p>`}
     <footer class="actions">
-      <button class="secondary outline" data-action="rename-option" data-id="${option.id}">Rename</button>
       <button class="secondary outline" data-action="delete-option" data-id="${option.id}">Delete option</button>
     </footer>`;
 }
@@ -212,16 +211,16 @@ const actions = {
     commit(() => (findOption(id).color = input.value));
   },
 
-  async "add-option"() {
-    const trip = activeTrip(state);
-    const name = await askText("Name the new option", nextOptionName(trip));
-    if (!name) return;
-    commit(() => (chosenId = addOption(trip, name).id));
+  // Starts with a placeholder name, ready to type over.
+  "add-option"() {
+    commit(() => (chosenId = addOption(activeTrip(state)).id));
+    detail.querySelector(".option-name-input").select();
   },
 
-  async "rename-option"(id) {
-    const name = await askText("Rename this option", findOption(id).name);
+  "rename-option"(id, input) {
+    const name = input.value.trim();
     if (name) commit(() => (findOption(id).name = name));
+    else input.value = findOption(id).name;
   },
 
   async "delete-option"(id) {
@@ -268,6 +267,15 @@ const actions = {
 function handle(element) {
   actions[element.dataset.action](element.dataset.id, element);
 }
+
+// Enter keeps a new option name; Escape puts back the old one.
+on(detail, "keydown", ".option-name-input", (input, event) => {
+  if (event.key === "Enter") input.blur();
+  if (event.key === "Escape") {
+    input.value = findOption(input.dataset.id).name;
+    input.blur();
+  }
+});
 
 for (const section of [document.getElementById("options"), detail]) {
   on(section, "click", "button[data-action]", handle);

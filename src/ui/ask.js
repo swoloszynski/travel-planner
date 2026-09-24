@@ -22,11 +22,6 @@ async function ask({ heading, text = "", value = null, okLabel = "OK", canCancel
   return (await result) === "ok";
 }
 
-// Resolves with the trimmed text, or null if cancelled.
-export async function askText(heading, value = "") {
-  return (await ask({ heading, value })) ? answer.value.trim() : null;
-}
-
 export function confirmAction(heading, text, okLabel) {
   return ask({ heading, text, okLabel });
 }
