@@ -1,0 +1,50 @@
+/* Pico styles the page. This file adds the layout and what Pico doesn't cover. */
+
+.layout {
+  display: grid;
+  grid-template-columns: 28rem 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Calendar, in Pico's colors */
+
+.fc {
+  --fc-border-color: var(--pico-muted-border-color);
+  --fc-page-bg-color: var(--pico-background-color);
+  --fc-neutral-bg-color: var(--pico-card-sectioning-background-color);
+  --fc-today-bg-color: color-mix(in srgb, var(--pico-primary) 8%, transparent);
+  --fc-now-indicator-color: var(--pico-del-color);
+  --fc-button-bg-color: var(--pico-secondary-background);
+  --fc-button-border-color: var(--pico-secondary-border);
+  --fc-button-text-color: var(--pico-secondary-inverse);
+  --fc-button-hover-bg-color: var(--pico-secondary-hover-background);
+  --fc-button-hover-border-color: var(--pico-secondary-hover-border);
+  --fc-button-active-bg-color: var(--pico-primary-background);
+  --fc-button-active-border-color: var(--pico-primary-border);
+  font-size: 0.875rem;
+}
+
+.fc .fc-toolbar-title {
+  font-size: 1.25rem;
+}
+
+.fc a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.fc-event.event-transit { opacity: 0.55; }
+.fc-event.event-airport { opacity: 0.75; }
+.fc-event.event-layover { opacity: 0.4; }
+
+.fc .fc-bg-event.sleep {
+  background: #64748b;
+  opacity: 0.16;
+}
