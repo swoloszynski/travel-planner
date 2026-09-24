@@ -37,6 +37,24 @@
       </div>
     </article>
 
+    <article id="search">
+      <hgroup>
+        <h2>Find flights</h2>
+        <p>Opens Google Flights in a new tab. Copy a result, then use Paste flights below.</p>
+      </hgroup>
+      <form id="search-form">
+        <div class="grid">
+          <label>From <input name="from" list="airports" placeholder="JFK" required></label>
+          <label>To <input name="to" list="airports" placeholder="LAX" required></label>
+        </div>
+        <div class="grid">
+          <label>Leave <input type="date" name="depart"></label>
+          <label>Return <input type="date" name="returns"></label>
+        </div>
+        <button>Search Google Flights</button>
+      </form>
+    </article>
+
     <article id="options">
       <hgroup>
         <h2>Options</h2>
