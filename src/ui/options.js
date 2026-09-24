@@ -1,12 +1,21 @@
 // The options being compared, and the itineraries in the chosen one.
 import { state, commit, onChange, render } from "../app.js";
-import { activeTrip, addOption, deleteOption, nextOptionName } from "../state.js";
+import {
+  activeTrip,
+  addOption,
+  deleteItinerary,
+  deleteLeg,
+  deleteOption,
+  findItinerary,
+  mergeItineraries,
+  nextOptionName,
+} from "../state.js";
 import { KIND_LABELS, arrival, dayChange, departure, flightMinutes, minutesBetween, optionCost } from "../model.js";
 import { describeOption } from "../describe.js";
-import { formatDate, formatDuration, formatPrice, formatTime } from "../format.js";
+import { formatDate, formatDuration, formatPrice, formatTime, parsePrice } from "../format.js";
 import { html } from "../html.js";
 import { on, redraw } from "./dom.js";
-import { askText, confirmDelete } from "./ask.js";
+import { askText, confirmDelete, tell } from "./ask.js";
 
 const list = document.getElementById("option-list");
 const detail = document.getElementById("option-detail");
@@ -88,8 +97,9 @@ function optionDetail(option) {
     </footer>`;
 }
 
-function itineraryCard(itinerary) {
-  const { number, kind, route, directions, transfer, sleepMinutes, price } = itinerary;
+function itineraryCard(itinerary, index, all) {
+  const { id, number, kind, route, directions, transfer, sleepMinutes, price } = itinerary;
+  const others = all.filter((other) => other !== itinerary);
   const dates = [...new Set(directions.map((d) => formatDate(departure(d[0]))))].join(" – ");
   const details = directions.length === 1 ? [dates, stopsText(directions[0])] : [dates];
 
@@ -107,9 +117,21 @@ function itineraryCard(itinerary) {
           <p>${details.join(" · ")}</p>
           ${sleepMinutes ? html`<p class="sleep-note">${formatDuration(sleepMinutes)} during usual sleep</p>` : ""}
         </hgroup>
-        <strong>${typeof price === "number" ? formatPrice(price, state.settings.currency) : ""}</strong>
+        <label class="price">
+          Price
+          <input inputmode="decimal" placeholder="Add price" data-action="set-price" data-id="${id}"
+            value="${price ?? ""}">
+        </label>
       </div>
       ${directions.map((direction, i) => directionBlock(direction, directionName(kind, directions.length, i)))}
+      <footer class="itinerary-actions">
+        ${others.length > 0 &&
+        html`<select data-action="merge-itinerary" data-id="${id}" aria-label="Combine with another itinerary">
+          <option value="">Same booking as…</option>
+          ${others.map((other) => html`<option value="${other.id}">Itinerary ${other.number}: ${other.route}</option>`)}
+        </select>`}
+        <button class="link danger" data-action="delete-itinerary" data-id="${id}">Delete itinerary</button>
+      </footer>
     </li>`;
 }
 
@@ -152,6 +174,9 @@ function legRow(leg) {
         ${leg.to}
       </p>
       <p class="leg-about">${carrier} · ${formatDuration(flightMinutes(leg))}</p>
+      <p class="leg-actions">
+        <button class="link danger" data-action="delete-leg" data-id="${leg.id}">Remove</button>
+      </p>
     </div>`;
 }
 
@@ -188,6 +213,34 @@ const actions = {
     if (await confirmDelete(`Delete ${option.name}?`, text)) {
       commit(() => deleteOption(activeTrip(state), id));
     }
+  },
+
+  "set-price"(id, input) {
+    commit(() => (findItinerary(activeTrip(state), id).itinerary.price = parsePrice(input.value)));
+  },
+
+  async "merge-itinerary"(id, select) {
+    const trip = activeTrip(state);
+    const { option, itinerary } = findItinerary(trip, id);
+    const into = findItinerary(trip, select.value)?.itinerary;
+    if (!into) return;
+    const bothPriced = itinerary.price !== null && into.price !== null;
+    commit(() => mergeItineraries(option, id, into.id));
+    if (bothPriced) {
+      await tell("Prices added together", "Both itineraries had a price. Change it if the combined fare is different.");
+    }
+  },
+
+  async "delete-itinerary"(id) {
+    if (!(await confirmDelete("Delete this itinerary?", "This deletes all its flights."))) return;
+    commit(() => {
+      const { option } = findItinerary(activeTrip(state), id);
+      deleteItinerary(option, id);
+    });
+  },
+
+  "delete-leg"(id) {
+    commit(() => deleteLeg(activeTrip(state), id));
   },
 };
 
