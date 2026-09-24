@@ -63,12 +63,28 @@ body > header strong {
 
 /* Layout */
 
+/* Adding flights on the left, the calendar in the middle, and comparing
+   options on the right. Narrower screens stack the two side panels. */
+
 .layout {
   display: grid;
-  grid-template-columns: 360px 1fr;
+  grid-template-columns: 340px 1fr 380px;
+  grid-template-areas: "build calendar compare";
   gap: 16px;
   padding: 16px;
   align-items: start;
+}
+
+.build {
+  grid-area: build;
+}
+
+#calendar {
+  grid-area: calendar;
+}
+
+.compare {
+  grid-area: compare;
 }
 
 .sidebar {
@@ -79,13 +95,23 @@ body > header strong {
   overflow-y: auto;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1280px) {
   .layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: 360px 1fr;
+    grid-template-areas:
+      "build calendar"
+      "compare calendar";
   }
 
   .sidebar {
     max-height: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+    grid-template-areas: "build" "compare" "calendar";
   }
 }
 

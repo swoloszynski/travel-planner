@@ -26,7 +26,7 @@
 </header>
 
 <main class="layout">
-  <aside class="sidebar">
+  <aside class="sidebar build">
     <article id="trip">
       <details id="trip-panel" open>
         <summary><h2>Trip <span id="trip-name"></span></h2></summary>
@@ -62,11 +62,14 @@
         </form>
       </details>
     </article>
+  </aside>
+  <div id="calendar"></div>
 
+  <aside class="sidebar compare">
     <article id="options">
       <hgroup>
-        <h2>Options</h2>
-        <p>Checked options show on the calendar.</p>
+        <h2>Compare options</h2>
+        <p>Checked options show on the calendar. Click one to see its bookings.</p>
       </hgroup>
       <ul id="option-list" class="option-list"></ul>
       <button class="link" data-action="add-option">+ New option</button>
@@ -74,7 +77,6 @@
 
     <article id="option-detail" class="option-detail"></article>
   </aside>
-  <div id="calendar"></div>
 </main>
 
 <dialog id="settings-dialog">
