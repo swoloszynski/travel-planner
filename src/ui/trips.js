@@ -3,8 +3,7 @@ import { state, commit, onChange, render } from "../app.js";
 import { activeTrip, addTrip, deleteTrip } from "../state.js";
 import { goToTripStart } from "../calendar.js";
 import { html } from "../html.js";
-import { on, redraw } from "./dom.js";
-import { confirmDelete } from "./ask.js";
+import { confirmed, on, redraw } from "./dom.js";
 
 const section = document.getElementById("trip");
 const picker = document.getElementById("trip-picker");
@@ -79,12 +78,11 @@ const actions = {
     startRenaming();
   },
 
-  async "delete-trip"() {
-    const trip = activeTrip(state);
-    if (!(await confirmDelete(`Delete ${trip.name}?`, "This deletes all its options and flights."))) return;
-    commit((s) => deleteTrip(s, trip.id));
+  "delete-trip"(button) {
+    if (!confirmed(button)) return;
+    commit((s) => deleteTrip(s, s.activeTripId));
     goToTripStart();
   },
 };
 
-on(section, "click", "button[data-action]", (button) => actions[button.dataset.action]());
+on(section, "click", "button[data-action]", (button) => actions[button.dataset.action](button));

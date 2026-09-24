@@ -21,8 +21,7 @@ import {
 import { describeOption } from "../describe.js";
 import { formatDate, formatDuration, formatPrice, formatTime, parsePrice } from "../format.js";
 import { html } from "../html.js";
-import { on, redraw } from "./dom.js";
-import { confirmDelete, tell } from "./ask.js";
+import { confirmed, on, redraw } from "./dom.js";
 import { addBooking, addToItinerary, editLeg, editorAt, editorDrawn } from "./flight-editor.js";
 
 const list = document.getElementById("option-list");
@@ -104,7 +103,8 @@ function optionDetail(option) {
       ? html`<ol class="itineraries">${option.itineraries.map(itineraryCard)}</ol>`
       : html`<p class="empty">No flights yet.</p>`}
     <footer class="actions">
-      <button class="secondary outline" data-action="delete-option" data-id="${option.id}">Delete option</button>
+      <button class="secondary outline" data-action="delete-option" data-id="${option.id}"
+        data-confirm="Delete option and its flights?">Delete option</button>
     </footer>`;
 }
 
@@ -143,7 +143,8 @@ function itineraryCard(itinerary, index, all) {
           <option value="">Same booking as…</option>
           ${others.map((other) => html`<option value="${other.id}">Itinerary ${other.number}: ${other.route}</option>`)}
         </select>`}
-        <button class="link danger" data-action="delete-itinerary" data-id="${id}">Delete itinerary</button>
+        <button class="link danger" data-action="delete-itinerary" data-id="${id}"
+          data-confirm="Delete itinerary and its flights?">Delete itinerary</button>
       </footer>
     </li>`;
 }
@@ -223,32 +224,24 @@ const actions = {
     else input.value = findOption(id).name;
   },
 
-  async "delete-option"(id) {
-    const option = findOption(id);
-    const text = option.itineraries.length ? "This deletes all its flights." : "";
-    if (await confirmDelete(`Delete ${option.name}?`, text)) {
-      commit(() => deleteOption(activeTrip(state), id));
-    }
+  "delete-option"(id, button) {
+    if (confirmed(button)) commit(() => deleteOption(activeTrip(state), id));
   },
 
   "set-price"(id, input) {
     commit(() => (findItinerary(activeTrip(state), id).itinerary.price = parsePrice(input.value)));
   },
 
-  async "merge-itinerary"(id, select) {
+  // Prices are added together; the combined price shows on the card to
+  // change if the fare is different.
+  "merge-itinerary"(id, select) {
     const trip = activeTrip(state);
-    const { option, itinerary } = findItinerary(trip, id);
-    const into = findItinerary(trip, select.value)?.itinerary;
-    if (!into) return;
-    const bothPriced = itinerary.price !== null && into.price !== null;
-    commit(() => mergeItineraries(option, id, into.id));
-    if (bothPriced) {
-      await tell("Prices added together", "Both itineraries had a price. Change it if the combined fare is different.");
-    }
+    const { option } = findItinerary(trip, id);
+    if (select.value) commit(() => mergeItineraries(option, id, select.value));
   },
 
-  async "delete-itinerary"(id) {
-    if (!(await confirmDelete("Delete this itinerary?", "This deletes all its flights."))) return;
+  "delete-itinerary"(id, button) {
+    if (!confirmed(button)) return;
     commit(() => {
       const { option } = findItinerary(activeTrip(state), id);
       deleteItinerary(option, id);

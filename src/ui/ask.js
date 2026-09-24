@@ -26,10 +26,6 @@ export function confirmAction(heading, text, okLabel) {
   return ask({ heading, text, okLabel });
 }
 
-export function confirmDelete(heading, text) {
-  return confirmAction(heading, text, "Delete");
-}
-
 export async function tell(heading, text) {
   await ask({ heading, text, canCancel: false });
 }
