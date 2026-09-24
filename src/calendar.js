@@ -5,6 +5,7 @@ import { activeTrip } from "./state.js";
 import { sortByDeparture } from "./model.js";
 import { optionEvents } from "./events.js";
 import { sleepWindows } from "./sleep.js";
+import { html } from "./html.js";
 
 export function createCalendar(element, getState) {
   const calendar = new FullCalendar.Calendar(element, {
@@ -22,6 +23,7 @@ export function createCalendar(element, getState) {
     slotMaxTime: "28:00:00",
     nextDayThreshold: "04:00:00",
     eventTimeFormat: { hour: "numeric", minute: "2-digit" },
+    slotLabelContent: (slot) => ({ html: String(slotLabel(slot, getState().settings)) }),
   });
   calendar.addEventSource({ id: "flights", events: (info, success) => success(flightEvents(getState())) });
   calendar.addEventSource({ id: "sleep", events: (info, success) => success(sleepEvents(info, getState().settings)) });
@@ -57,6 +59,33 @@ export function goToTripStart(calendar, trip) {
 // ends were in the same zone, making it look shorter or longer than it is.
 function toDisplay(dateTime, settings) {
   return dateTime.setZone(settings.displayTz).toISO();
+}
+
+// The time in each chosen zone, so "9:00 AM EDT" and "6:00 AM PDT" sit
+// side by side down the calendar's left edge.
+//
+// FullCalendar gives the slot's clock time in the display zone, stored in
+// the Date's UTC fields on Jan 1, 1970 (Jan 2 for slots past midnight).
+// Moving that clock time onto the week in view gets the right daylight
+// saving offsets.
+function slotLabel({ date, view }, settings) {
+  const weekStart = DateTime.fromJSDate(view.currentStart, { zone: "utc" });
+  const instant = DateTime.fromObject(
+    {
+      year: weekStart.year,
+      month: weekStart.month,
+      day: weekStart.day,
+      hour: date.getUTCHours(),
+      minute: date.getUTCMinutes(),
+    },
+    { zone: settings.displayTz }
+  ).plus({ days: date.getUTCDate() - 1 });
+
+  const zones = [...new Set([settings.displayTz, ...settings.extraTimezones])];
+  return html`${zones.map((zone) => {
+    const time = instant.setZone(zone);
+    return html`<div class="slot-time">${time.toFormat("h:mm a")} ${time.offsetNameShort}</div>`;
+  })}`;
 }
 
 function flightEvents(state) {
