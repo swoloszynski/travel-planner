@@ -14,6 +14,7 @@ const fixtures = [
   "unknown-airport",
   "depart-arrive",
   "time-then-code",
+  "unknown-arrival-airport",
 ];
 
 for (const name of fixtures) {

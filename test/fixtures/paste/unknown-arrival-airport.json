@@ -1,0 +1,6 @@
+{
+  "legs": [
+    { "airline": "", "flightNumber": "", "from": "LGA", "fromTz": "America/New_York", "departs": "2026-11-06T12:40", "to": "SHD", "toTz": "", "arrives": "2026-11-06T14:10" }
+  ],
+  "price": null
+}

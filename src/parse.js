@@ -60,11 +60,11 @@ function readSection({ month, day, lines }, today) {
   const count = Math.min(Math.floor(times.length / 2), Math.floor(codes.length / 2));
 
   const legs = [];
-  let clock = resolveDate(month, day, today, zoneOf(codes[0]));
+  let clock = resolveDate(month, day, today, zoneOf(codes[0], codes[1]));
   for (let i = 0; i < count; i++) {
     const [from, to] = [codes[2 * i], codes[2 * i + 1]];
-    const departs = nextTime(times[2 * i], zoneOf(from), clock);
-    const arrives = nextTime(times[2 * i + 1], zoneOf(to), departs);
+    const departs = nextTime(times[2 * i], zoneOf(from, to), clock);
+    const arrives = nextTime(times[2 * i + 1], zoneOf(to, from), departs);
     clock = arrives;
     legs.push(makeLeg(text, numbers[i], from, localTime(departs), to, localTime(arrives)));
   }
@@ -131,10 +131,12 @@ function airportCodes(text) {
   return [];
 }
 
-// An unknown airport's times are read as UTC. They still come out right
-// as local times; only the time difference to other airports is lost.
-function zoneOf(code) {
-  return findAirport(code)?.tz ?? "UTC";
+// An airport not in the list is taken to be in the same timezone as the
+// other end of its flight. Its times are then compared as plain clock
+// times: a 12:40 PM departure and a 2:10 PM arrival land the same day.
+// Reading them in two unrelated zones could push the arrival a day on.
+function zoneOf(code, otherEnd) {
+  return findAirport(code)?.tz ?? findAirport(otherEnd)?.tz ?? "UTC";
 }
 
 // Google Flights leaves out the year. Dates more than 90 days ago are
