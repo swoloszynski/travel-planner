@@ -108,10 +108,35 @@ body > header strong {
   }
 }
 
+/* The app needs room for a sidebar beside the calendar. Narrower screens
+   get a note saying what it is instead. */
+
+.small-screen {
+  display: none;
+}
+
 @media (max-width: 900px) {
+  body > header,
   .layout {
-    grid-template-columns: 1fr;
-    grid-template-areas: "build" "compare" "calendar";
+    display: none;
+  }
+
+  .small-screen {
+    display: block;
+    max-width: 32rem;
+    margin: 20vh auto 0;
+    padding: 0 16px;
+    line-height: 1.5;
+  }
+
+  .small-screen h1 {
+    margin: 0 0 8px;
+    font-size: 22px;
+  }
+
+  .small-screen p {
+    margin-bottom: 12px;
+    color: var(--text-muted);
   }
 }
 
