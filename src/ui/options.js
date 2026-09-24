@@ -19,6 +19,7 @@ import {
   optionCost,
 } from "../model.js";
 import { describeOption } from "../describe.js";
+import { googleFlightsSearches } from "../google-flights.js";
 import { formatDate, formatDuration, formatPrice, formatTime, parsePrice } from "../format.js";
 import { html } from "../html.js";
 import { confirmed, on, redraw } from "./dom.js";
@@ -122,6 +123,9 @@ function itineraryCard(itinerary, index, all) {
       ${directions.map((direction, i) => directionBlock(direction, directionName(kind, directions.length, i)))}
       <footer class="itinerary-actions">
         <button class="link" data-action="add-flight" data-id="${id}">+ Add flight</button>
+        ${googleFlightsSearches(itinerary.legs).map(
+          ({ label, url }) => html`<a class="link" href="${url}" target="_blank" rel="noopener">${label} ↗</a>`
+        )}
         ${others.length > 0 &&
         html`<select data-action="merge-itinerary" data-id="${id}" aria-label="Combine with another booking">
           <option value="">Same booking as…</option>
