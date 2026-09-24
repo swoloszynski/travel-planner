@@ -140,6 +140,7 @@ const ROWS = [
   ["PBI","Palm Beach Intl","West Palm Beach, US","America/New_York"],
   ["RIC","Richmond Intl","Richmond, US","America/New_York"],
   ["ORF","Norfolk Intl","Norfolk, US","America/New_York"],
+  ["CHO","Charlottesville-Albemarle","Charlottesville, US","America/New_York"],
   ["BUF","Buffalo Niagara Intl","Buffalo, US","America/New_York"],
   ["ROC","Frederick Douglass Greater Rochester Intl","Rochester, US","America/New_York"],
   ["ALB","Albany Intl","Albany, US","America/New_York"],
