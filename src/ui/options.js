@@ -22,25 +22,12 @@ import { describeOption } from "../describe.js";
 import { formatDate, formatDuration, formatPrice, formatTime, parsePrice } from "../format.js";
 import { html } from "../html.js";
 import { confirmed, on, redraw } from "./dom.js";
-import { addBooking, addToItinerary, editLeg, editorAt, editorDrawn } from "./flight-editor.js";
+import { chooseOption, chosenOption } from "./chosen.js";
+import { addToBooking } from "./add-flights.js";
+import { editLeg, legEditor, legEditorDrawn } from "./leg-editor.js";
 
 const list = document.getElementById("option-list");
 const detail = document.getElementById("option-detail");
-
-// The option whose itineraries are shown. Not saved.
-let chosenId = null;
-
-export function chooseOption(id) {
-  chosenId = id;
-  render();
-}
-
-function chosenOption() {
-  const { options } = activeTrip(state);
-  return (
-    options.find((o) => o.id === chosenId) ?? options.find((o) => o.itineraries.length) ?? options[0]
-  );
-}
 
 function findOption(id) {
   return activeTrip(state).options.find((o) => o.id === id);
@@ -50,7 +37,7 @@ onChange(() => {
   const chosen = chosenOption();
   redraw(list, html`${activeTrip(state).options.map((option) => optionRow(option, option === chosen))}`);
   redraw(detail, optionDetail(describeOption(chosen, state.settings)));
-  editorDrawn(detail);
+  legEditorDrawn();
 });
 
 // Drawing
@@ -97,8 +84,6 @@ function optionDetail(option) {
       </hgroup>
       <strong>${cost.count ? costText(cost) : ""}</strong>
     </header>
-    ${editorAt("option", option.id) ??
-    html`<p><button class="small" data-action="add-booking" data-id="${option.id}">+ Add flights</button></p>`}
     ${option.itineraries.length
       ? html`<ol class="itineraries">${option.itineraries.map(itineraryCard)}</ol>`
       : html`<p class="empty">No flights yet.</p>`}
@@ -135,7 +120,6 @@ function itineraryCard(itinerary, index, all) {
         </label>
       </div>
       ${directions.map((direction, i) => directionBlock(direction, directionName(kind, directions.length, i)))}
-      ${editorAt("itinerary", id)}
       <footer class="itinerary-actions">
         <button class="link" data-action="add-flight" data-id="${id}">+ Add flight</button>
         ${others.length > 0 &&
@@ -177,7 +161,7 @@ function directionBlock(direction, name) {
 }
 
 function legRow(leg) {
-  const editor = editorAt("leg", leg.id);
+  const editor = legEditor(leg.id);
   if (editor) return editor;
   const days = dayChange(leg);
   const carrier = [leg.airline, leg.flightNumber].filter(Boolean).join(" ") || "Flight";
@@ -202,6 +186,7 @@ function legRow(leg) {
 const actions = {
   "choose-option"(id) {
     chooseOption(id);
+    render();
   },
 
   "toggle-option"(id, input) {
@@ -214,7 +199,7 @@ const actions = {
 
   // Starts with a placeholder name, ready to type over.
   "add-option"() {
-    commit(() => (chosenId = addOption(activeTrip(state)).id));
+    commit(() => chooseOption(addOption(activeTrip(state)).id));
     detail.querySelector(".option-name-input").select();
   },
 
@@ -248,8 +233,10 @@ const actions = {
     });
   },
 
-  "add-booking": addBooking,
-  "add-flight": addToItinerary,
+  "add-flight"(id) {
+    addToBooking(chosenOption().id, id);
+  },
+
   "edit-leg": editLeg,
 
   "delete-leg"(id) {

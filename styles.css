@@ -677,7 +677,26 @@ button.option-name:hover {
   border-radius: var(--radius);
 }
 
-.flight-editor [data-editor-action="fill"] {
+/* Add flights panel */
+
+#add-flights h3 {
+  margin: 14px 0 8px;
+  padding-top: 12px;
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+}
+
+#add-flights h3:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+#add-flights textarea {
+  margin-bottom: 8px;
+}
+
+[data-builder-action="fill"] {
   margin-bottom: 8px;
 }
 
