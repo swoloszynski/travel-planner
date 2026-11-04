@@ -8,6 +8,8 @@ import { confirmed, on, redraw } from "./dom.js";
 const section = document.getElementById("trip");
 const picker = document.getElementById("trip-picker");
 const startDate = document.getElementById("trip-start");
+const daysToShow = document.getElementById("trip-days");
+const weekStart = document.getElementById("trip-week-start");
 const tripName = document.getElementById("trip-name");
 
 // Whether the picker is showing a text field to rename the trip. Not saved.
@@ -17,6 +19,8 @@ onChange(() => {
   const trip = activeTrip(state);
   tripName.textContent = trip.name;
   startDate.value = trip.startDate;
+  daysToShow.value = trip.daysToShow;
+  weekStart.value = trip.weekStart;
   section.classList.toggle("renaming", renaming);
   redraw(
     picker,
@@ -55,6 +59,16 @@ function cancelRename() {
 startDate.addEventListener("change", () => {
   commit((s) => (activeTrip(s).startDate = startDate.value));
   goToTripStart();
+});
+
+// How the calendar shows this trip: 1 to 7 days, from which day of the week.
+daysToShow.addEventListener("change", () => {
+  const days = Math.min(7, Math.max(1, Math.round(Number(daysToShow.value)) || 7));
+  commit((s) => (activeTrip(s).daysToShow = days));
+});
+
+weekStart.addEventListener("change", () => {
+  commit((s) => (activeTrip(s).weekStart = Number(weekStart.value)));
 });
 
 on(picker, "change", '[data-action="pick-trip"]', (select) => {

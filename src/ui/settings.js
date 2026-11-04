@@ -1,7 +1,6 @@
 // The settings dialog. Each field is named after the setting it edits, and
 // changes save as soon as every field makes sense.
 import { state, commit, onChange } from "../app.js";
-import { applySettings } from "../calendar.js";
 import { isCurrency } from "../format.js";
 import { findTimezone } from "../timezones.js";
 
@@ -14,15 +13,13 @@ const PLAIN = [
   "minutesToAirport",
   "minutesAtAirport",
   "minutesFromAirport",
-  "daysToShow",
-  "weekStart",
   "currency",
   "sleepStart",
   "sleepEnd",
   "sleepTz",
   "googleClientId",
 ];
-const NUMBERS = ["minutesToAirport", "minutesAtAirport", "minutesFromAirport", "daysToShow", "weekStart"];
+const NUMBERS = ["minutesToAirport", "minutesAtAirport", "minutesFromAirport"];
 const EXTRA_ZONES = ["extraTimezone1", "extraTimezone2"];
 const TIMEZONE_FIELDS = ["displayTz", "sleepTz", ...EXTRA_ZONES];
 
@@ -46,7 +43,6 @@ form.addEventListener("change", (event) => {
   check();
   if (!event.target.reportValidity() || !form.checkValidity()) return;
   commit((s) => Object.assign(s.settings, read()));
-  applySettings();
 });
 
 form.addEventListener("submit", (event) => event.preventDefault());

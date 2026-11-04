@@ -8,6 +8,9 @@ import { optionEvents } from "./events.js";
 import { sleepWindows } from "./sleep.js";
 import { html } from "./html.js";
 
+// The view last passed to FullCalendar. See applyView.
+let appliedView = "";
+
 export const calendar = new FullCalendar.Calendar(document.getElementById("calendar"), {
   initialView: "timeGridWeek",
   headerToolbar: {
@@ -27,21 +30,29 @@ export const calendar = new FullCalendar.Calendar(document.getElementById("calen
 });
 calendar.addEventSource({ id: "flights", events: (info, success) => success(flightEvents()) });
 calendar.addEventSource({ id: "sleep", events: (info, success) => success(sleepEvents(info)) });
-applySettings();
+applyView();
 calendar.render();
 goToTripStart();
 
 onChange(() => {
+  applyView();
   calendar.getEventSourceById("flights").refetch();
   calendar.getEventSourceById("sleep").refetch();
 });
 
-export function applySettings() {
-  const { daysToShow, weekStart, displayTz } = state.settings;
+// The display timezone, and the active trip's first day and number of
+// days. Only changes are passed on, since each one redraws the calendar.
+function applyView() {
+  const { daysToShow, weekStart } = activeTrip(state);
   const shown = Array.from({ length: daysToShow }, (_, i) => (weekStart + i) % 7);
-  calendar.setOption("timeZone", displayTz);
-  calendar.setOption("firstDay", weekStart);
-  calendar.setOption("hiddenDays", [0, 1, 2, 3, 4, 5, 6].filter((day) => !shown.includes(day)));
+  const view = {
+    timeZone: state.settings.displayTz,
+    firstDay: weekStart,
+    hiddenDays: [0, 1, 2, 3, 4, 5, 6].filter((day) => !shown.includes(day)),
+  };
+  if (JSON.stringify(view) === appliedView) return;
+  appliedView = JSON.stringify(view);
+  Object.entries(view).forEach(([name, value]) => calendar.setOption(name, value));
 }
 
 // Opens on the trip's start date if it has one, otherwise its first
@@ -70,12 +81,12 @@ export function toDisplay(dateTime) {
 // saving offsets.
 function slotLabel({ date, view }) {
   const { displayTz, extraTimezones } = state.settings;
-  const weekStart = DateTime.fromJSDate(view.currentStart, { zone: "utc" });
+  const viewStart = DateTime.fromJSDate(view.currentStart, { zone: "utc" });
   const instant = DateTime.fromObject(
     {
-      year: weekStart.year,
-      month: weekStart.month,
-      day: weekStart.day,
+      year: viewStart.year,
+      month: viewStart.month,
+      day: viewStart.day,
       hour: date.getUTCHours(),
       minute: date.getUTCMinutes(),
     },

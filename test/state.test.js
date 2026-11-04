@@ -88,3 +88,20 @@ test("restoreState rejects data that isn't from this version", () => {
   assertEqual(restoreState({ version: VERSION + 1, trips: [] }), null);
   assertEqual(restoreState({ flights: [] }), null);
 });
+
+test("a new trip shows seven days starting Sunday", () => {
+  const trip = activeTrip(createState());
+  assertEqual([trip.daysToShow, trip.weekStart], [7, 0]);
+});
+
+test("restoreState moves days to show and week start from settings to each trip", () => {
+  const saved = createState();
+  const [trip] = saved.trips;
+  delete trip.daysToShow;
+  delete trip.weekStart;
+  saved.settings.daysToShow = 5;
+  saved.settings.weekStart = 1;
+  const restored = restoreState(saved);
+  assertEqual([restored.trips[0].daysToShow, restored.trips[0].weekStart], [5, 1]);
+  assertEqual(["daysToShow" in restored.settings, "weekStart" in restored.settings], [false, false]);
+});

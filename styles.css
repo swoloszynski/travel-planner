@@ -425,6 +425,23 @@ button:disabled {
   width: auto;
 }
 
+.trip-view {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.trip-view input {
+  width: 56px;
+}
+
+.trip-view select {
+  width: auto;
+}
+
 /* Options */
 
 .option-list {

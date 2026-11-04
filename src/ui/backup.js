@@ -2,7 +2,7 @@
 import { DateTime } from "luxon";
 import { state, replaceState } from "../app.js";
 import { restoreState } from "../state.js";
-import { applySettings, goToTripStart } from "../calendar.js";
+import { goToTripStart } from "../calendar.js";
 import { confirmed } from "./dom.js";
 import { say } from "./status.js";
 
@@ -41,6 +41,5 @@ fileInput.addEventListener("change", async () => {
   replaceState(imported);
   const count = imported.trips.length;
   say(`Imported ${count === 1 ? "1 trip" : `${count} trips`} from ${file.name}.`);
-  applySettings();
   goToTripStart();
 });

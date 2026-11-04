@@ -3,7 +3,7 @@
 import { DateTime } from "luxon";
 import { state, onChange, replaceState } from "../app.js";
 import { restoreState } from "../state.js";
-import { applySettings, goToTripStart } from "../calendar.js";
+import { goToTripStart } from "../calendar.js";
 import * as Folder from "../folder.js";
 import { planSync } from "../sync.js";
 import { confirmed } from "./dom.js";
@@ -100,7 +100,6 @@ async function syncOnce() {
   }
   await Folder.setLastWritten(file);
   replaceState(loaded);
-  applySettings();
   goToTripStart();
 }
 

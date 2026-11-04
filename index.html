@@ -55,6 +55,20 @@
           Trip starts
           <input type="date" id="trip-start">
         </label>
+        <p class="trip-view">
+          Show
+          <input type="number" id="trip-days" min="1" max="7" aria-label="Days to show">
+          days starting
+          <select id="trip-week-start" aria-label="First day shown">
+            <option value="0">Sunday</option>
+            <option value="1">Monday</option>
+            <option value="2">Tuesday</option>
+            <option value="3">Wednesday</option>
+            <option value="4">Thursday</option>
+            <option value="5">Friday</option>
+            <option value="6">Saturday</option>
+          </select>
+        </p>
         <button class="link danger" data-action="delete-trip" data-confirm="Click again to delete this trip and its flights">
           Delete this trip
         </button>
@@ -100,21 +114,6 @@
         <div class="grid">
           <label>Also label times in <input name="extraTimezone1" list="timezones" placeholder="Los Angeles"></label>
           <label>and in <input name="extraTimezone2" list="timezones" placeholder="London"></label>
-        </div>
-        <div class="grid">
-          <label>Days to show <input type="number" name="daysToShow" min="1" max="7" required></label>
-          <label>
-            Week starts on
-            <select name="weekStart">
-              <option value="0">Sunday</option>
-              <option value="1">Monday</option>
-              <option value="2">Tuesday</option>
-              <option value="3">Wednesday</option>
-              <option value="4">Thursday</option>
-              <option value="5">Friday</option>
-              <option value="6">Saturday</option>
-            </select>
-          </label>
         </div>
       </fieldset>
       <fieldset>

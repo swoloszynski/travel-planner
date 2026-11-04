@@ -2,7 +2,7 @@
 //
 // state = {
 //   version, settings, activeTripId,
-//   trips: [{ id, name, startDate,
+//   trips: [{ id, name, startDate, daysToShow, weekStart,
 //     options: [{ id, name, color, visible,
 //       itineraries: [{ id, price,
 //         legs: [{ id, airline, flightNumber, from, fromTz, departs, to, toTz, arrives }] }] }] }]
@@ -23,8 +23,6 @@ export function defaultSettings() {
     minutesToAirport: 45,
     minutesAtAirport: 120,
     minutesFromAirport: 30,
-    daysToShow: 7,
-    weekStart: 0,
     extraTimezones: [],
     currency: "USD",
     sleepEnabled: true,
@@ -48,7 +46,12 @@ export function createState() {
 export function restoreState(saved) {
   if (saved?.version !== VERSION || !saved.trips?.length) return null;
   const activeTripId = saved.trips.some((t) => t.id === saved.activeTripId) ? saved.activeTripId : saved.trips[0].id;
-  return { ...saved, settings: { ...defaultSettings(), ...saved.settings }, activeTripId };
+
+  // Days to show and the first day of the week used to be app settings.
+  const { daysToShow = 7, weekStart = 0, ...settings } = saved.settings ?? {};
+  const trips = saved.trips.map((trip) => ({ daysToShow, weekStart, ...trip }));
+
+  return { ...saved, settings: { ...defaultSettings(), ...settings }, activeTripId, trips };
 }
 
 function newId() {
@@ -58,7 +61,7 @@ function newId() {
 // Trips
 
 function newTrip(name) {
-  const trip = { id: newId(), name, startDate: "", options: [] };
+  const trip = { id: newId(), name, startDate: "", daysToShow: 7, weekStart: 0, options: [] };
   addOption(trip);
   return trip;
 }
