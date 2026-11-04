@@ -33,6 +33,9 @@ export function defaultSettings() {
     // (http://localhost:5173), which is why the dev server's port is fixed.
     googleClientId: "286045286235-on4jck7a2b0nl5f9t55rbt6165o4ddsd.apps.googleusercontent.com",
     googleCalendarIds: ["primary"],
+    // What Copy itinerary includes besides the flights.
+    itineraryLeaveTime: false,
+    itineraryPrice: false,
   };
 }
 

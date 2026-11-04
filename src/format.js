@@ -17,6 +17,14 @@ export function formatPrice(amount, currency) {
 }
 
 // "$1,204.50" → 1204.5. Blank text means no price.
+// What an option's bookings cost, from optionCost.
+export function costText({ total, unpriced, count }, currency) {
+  if (!count) return "No flights yet";
+  if (unpriced === count) return "No prices yet";
+  const price = formatPrice(total, currency);
+  return unpriced ? `${price} + ${unpriced} unpriced` : price;
+}
+
 export function parsePrice(text) {
   const digits = String(text ?? "").replace(/[^\d.]/g, "");
   const amount = Number(digits);

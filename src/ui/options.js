@@ -20,7 +20,8 @@ import {
 import { describeOption } from "../describe.js";
 import { googleFlightsSearches } from "../google-flights.js";
 import { bookingText } from "../booking-text.js";
-import { formatDate, formatDuration, formatPrice, formatTime, parsePrice } from "../format.js";
+import { itineraryText } from "../itinerary-text.js";
+import { costText, formatDate, formatDuration, formatTime, parsePrice } from "../format.js";
 import { html } from "../html.js";
 import { confirmed, on, redraw } from "./dom.js";
 import { say } from "./status.js";
@@ -44,13 +45,6 @@ onChange(() => {
 
 // Drawing
 
-function costText({ total, unpriced, count }) {
-  if (!count) return "No flights yet";
-  if (unpriced === count) return "No prices yet";
-  const price = formatPrice(total, state.settings.currency);
-  return unpriced ? `${price} + ${unpriced} unpriced` : price;
-}
-
 function plural(count, word) {
   return `${count} ${word}${count === 1 ? "" : "s"}`;
 }
@@ -64,7 +58,7 @@ function optionRow(option, isChosen) {
         aria-label="Color for ${option.name}">
       <button class="option-name" data-action="choose-option" data-id="${option.id}">
         <span>${option.name}</span>
-        <small>${costText(optionCost(option.itineraries))}</small>
+        <small>${costText(optionCost(option.itineraries), state.settings.currency)}</small>
       </button>
     </li>`;
 }
@@ -84,15 +78,32 @@ function optionDetail(option) {
           aria-label="Option name" title="Click to rename">
         <p>${notes.join(" · ")}</p>
       </hgroup>
-      <strong>${cost.count ? costText(cost) : ""}</strong>
+      <strong>${cost.count ? costText(cost, state.settings.currency) : ""}</strong>
     </header>
     ${option.itineraries.length
       ? html`<ol class="itineraries">${option.itineraries.map(itineraryCard)}</ol>`
       : html`<p class="empty">No flights yet.</p>`}
-    <footer class="actions">
-      <button class="link danger" data-action="delete-option" data-id="${option.id}"
-        data-confirm="Click again to delete this option and its flights">Delete option</button>
+    <footer>
+      ${cost.count ? itineraryChoices() : ""}
+      <div class="actions">
+        ${cost.count ? html`<button class="link" data-action="copy-itinerary" data-id="${option.id}">Copy itinerary</button>` : ""}
+        <button class="link danger" data-action="delete-option" data-id="${option.id}"
+          data-confirm="Click again to delete this option and its flights">Delete option</button>
+      </div>
     </footer>`;
+}
+
+function itineraryChoices() {
+  const choice = (setting, label) => html`
+    <label>
+      <input type="checkbox" data-action="include-in-itinerary" data-id="${setting}"
+        ${state.settings[setting] ? html`checked` : ""}>
+      ${label}
+    </label>`;
+  return html`<div class="actions">
+    ${choice("itineraryLeaveTime", "Time to leave for airport")}
+    ${choice("itineraryPrice", "Price")}
+  </div>`;
 }
 
 function itineraryCard(itinerary) {
@@ -238,6 +249,21 @@ const actions = {
     try {
       await navigator.clipboard.writeText(bookingText(itinerary, state.settings.currency));
       say("Copied. Paste into Add flights, then choose Fill in from paste.");
+    } catch {
+      say("Couldn't copy to the clipboard.");
+    }
+  },
+
+  "include-in-itinerary"(setting, input) {
+    commit((s) => (s.settings[setting] = input.checked));
+  },
+
+  // Copies the option as text to send in a message.
+  async "copy-itinerary"(id) {
+    const option = findOption(id);
+    try {
+      await navigator.clipboard.writeText(itineraryText(option, state.settings));
+      say(`Copied the itinerary for ${option.name}.`);
     } catch {
       say("Couldn't copy to the clipboard.");
     }
