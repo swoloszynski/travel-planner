@@ -21,6 +21,7 @@ import { describeOption } from "../describe.js";
 import { googleFlightsSearches } from "../google-flights.js";
 import { bookingText } from "../booking-text.js";
 import { itineraryText } from "../itinerary-text.js";
+import { googleCalendarLinks } from "../google-calendar-links.js";
 import { costText, formatDate, formatDuration, formatTime, parsePrice } from "../format.js";
 import { html } from "../html.js";
 import { confirmed, on, redraw } from "./dom.js";
@@ -31,6 +32,9 @@ import { editLeg, legEditor, legEditorDrawn } from "./leg-editor.js";
 
 const list = document.getElementById("option-list");
 const detail = document.getElementById("option-detail");
+
+// Whether the calendar links cover all travel, not just flights. Not saved.
+let allTravelEvents = false;
 
 function findOption(id) {
   return activeTrip(state).options.find((o) => o.id === id);
@@ -85,8 +89,9 @@ function optionDetail(option) {
       : html`<p class="empty">No flights yet.</p>`}
     <footer>
       ${cost.count ? itineraryChoices() : ""}
+      ${cost.count ? html`<p><button class="link" data-action="copy-itinerary" data-id="${option.id}">Copy itinerary</button></p>` : ""}
+      ${cost.count ? calendarLinks(option) : ""}
       <div class="actions">
-        ${cost.count ? html`<button class="link" data-action="copy-itinerary" data-id="${option.id}">Copy itinerary</button>` : ""}
         <button class="link danger" data-action="delete-option" data-id="${option.id}"
           data-confirm="Click again to delete this option and its flights">Delete option</button>
       </div>
@@ -104,6 +109,21 @@ function itineraryChoices() {
     ${choice("itineraryLeaveTime", "Time to leave for airport")}
     ${choice("itineraryPrice", "Price")}
   </div>`;
+}
+
+function calendarLinks(option) {
+  return html`<section class="calendar-links">
+    <h4>Add to Google Calendar</h4>
+    <label>
+      <input type="checkbox" data-action="toggle-all-travel" ${allTravelEvents ? html`checked` : ""}>
+      All travel events
+    </label>
+    <ul>
+      ${googleCalendarLinks(option, state.settings, allTravelEvents).map(
+        ({ label, url }) => html`<li><a class="link" href="${url}" target="_blank" rel="noopener">${label} ↗</a></li>`
+      )}
+    </ul>
+  </section>`;
 }
 
 function itineraryCard(itinerary) {
@@ -267,6 +287,11 @@ const actions = {
     } catch {
       say("Couldn't copy to the clipboard.");
     }
+  },
+
+  "toggle-all-travel"(id, input) {
+    allTravelEvents = input.checked;
+    render();
   },
 
   "delete-leg"(id) {

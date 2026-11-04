@@ -19,14 +19,14 @@ function directionEvents(direction, settings) {
   const events = [];
 
   if (settings.minutesToAirport > 0) {
-    events.push({ type: "transit", title: `Travel to ${first.from}`, start, end: atAirport });
+    events.push({ type: "transit", title: `Transit to ${first.from}`, start, end: atAirport });
   }
   if (settings.minutesAtAirport > 0) {
-    events.push({ type: "airport", title: `At ${first.from}`, start: atAirport, end: departure(first) });
+    events.push({ type: "airport", title: `At ${first.from} airport`, start: atAirport, end: departure(first) });
   }
 
   direction.forEach((leg, i) => {
-    events.push({ type: "flight", title: flightTitle(leg), start: departure(leg), end: arrival(leg) });
+    events.push({ type: "flight", title: flightTitle(leg), start: departure(leg), end: arrival(leg), leg });
     const next = direction[i + 1];
     if (next) {
       const minutes = minutesBetween(arrival(leg), departure(next));
@@ -40,14 +40,12 @@ function directionEvents(direction, settings) {
   });
 
   if (settings.minutesFromAirport > 0) {
-    events.push({ type: "transit", title: `Travel from ${last.to}`, start: arrival(last), end });
+    events.push({ type: "transit", title: `Transit from ${last.to}`, start: arrival(last), end });
   }
   return events;
 }
 
-// "Delta DL 123: JFK 6:00am → LAX 9:32am", in each airport's local time.
+// Calendars show the times, so the title is only the route.
 function flightTitle(leg) {
-  const carrier = [leg.airline, leg.flightNumber].filter(Boolean).join(" ") || "Flight";
-  const time = (dateTime) => dateTime.toFormat("h:mma").toLowerCase();
-  return `${carrier}: ${leg.from} ${time(departure(leg))} → ${leg.to} ${time(arrival(leg))}`;
+  return `✈️ ${leg.from} → ${leg.to}`;
 }

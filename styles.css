@@ -572,6 +572,22 @@ button.option-name:hover {
   margin-top: 12px;
 }
 
+.calendar-links {
+  margin: 12px 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
+.calendar-links ul {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  font-size: 12px;
+  list-style: none;
+}
+
 .itineraries {
   display: flex;
   flex-direction: column;

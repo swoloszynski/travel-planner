@@ -16,12 +16,12 @@ const denverToSfo = flight("DEN 2026-10-08 10:15", "SFO 2026-10-08 11:45", { air
 test("optionEvents covers door to door for a connecting trip", () => {
   const option = { itineraries: [{ legs: [denverToSfo, toDenver] }] };
   assertEqual(summarize(optionEvents(option, settings)), [
-    ["transit", "Travel to LGA", "Oct 8 04:30", "Oct 8 05:15"],
-    ["airport", "At LGA", "Oct 8 05:15", "Oct 8 07:15"],
-    ["flight", "United UA 1432: LGA 7:15am → DEN 9:05am", "Oct 8 07:15", "Oct 8 11:05"],
+    ["transit", "Transit to LGA", "Oct 8 04:30", "Oct 8 05:15"],
+    ["airport", "At LGA airport", "Oct 8 05:15", "Oct 8 07:15"],
+    ["flight", "✈️ LGA → DEN", "Oct 8 07:15", "Oct 8 11:05"],
     ["layover", "Layover in DEN (1h 10m)", "Oct 8 11:05", "Oct 8 12:15"],
-    ["flight", "United UA 588: DEN 10:15am → SFO 11:45am", "Oct 8 12:15", "Oct 8 14:45"],
-    ["transit", "Travel from SFO", "Oct 8 14:45", "Oct 8 15:15"],
+    ["flight", "✈️ DEN → SFO", "Oct 8 12:15", "Oct 8 14:45"],
+    ["transit", "Transit from SFO", "Oct 8 14:45", "Oct 8 15:15"],
   ]);
 });
 

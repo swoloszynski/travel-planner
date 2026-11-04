@@ -14,5 +14,6 @@ import "./events.test.js";
 import "./google-flights.test.js";
 import "./booking-text.test.js";
 import "./itinerary-text.test.js";
+import "./google-calendar-links.test.js";
 
 run();
