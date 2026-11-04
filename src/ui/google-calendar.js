@@ -3,25 +3,32 @@
 import { DateTime } from "luxon";
 import { state, commit, onChange } from "../app.js";
 import { calendar, toDisplay } from "../calendar.js";
-import { SignInExpired, listCalendars, listEvents, savedToken, signIn, signOut } from "../google.js";
+import { SignInExpired, listCalendars, listEvents, savedToken, signIn, signOut, wasSignedIn } from "../google.js";
 import { html } from "../html.js";
 import { redraw } from "./dom.js";
+import { say } from "./status.js";
 
 const status = document.getElementById("google-status");
 const list = document.getElementById("google-calendars");
 const connectButton = document.getElementById("google-connect");
 const disconnectButton = document.getElementById("google-disconnect");
+const reconnectButton = document.getElementById("google-reconnect");
 
 let token = savedToken();
 let calendars = [];
-let expired = false;
+// Signed in before, but the hour is up. Reconnecting doesn't ask anything
+// again: Google's popup opens and closes by itself.
+let expired = !token && wasSignedIn();
 let failure = "";
 // Signing in is tied to a client ID, so changing it in settings signs out.
 let clientId = state.settings.googleClientId;
 
 calendar.addEventSource({ id: "google", events: googleEvents });
 onChange(drawPanel);
-if (token) loadCalendars();
+if (token) {
+  watchExpiry();
+  loadCalendars();
+}
 
 function isConnected() {
   return Boolean(token) && calendars.length > 0;
@@ -37,6 +44,7 @@ function drawPanel() {
   connectButton.disabled = !clientId;
   connectButton.textContent = expired ? "Reconnect" : "Connect Google Calendar";
   disconnectButton.hidden = !isConnected() && !expired;
+  reconnectButton.hidden = !expired;
 
   if (failure) status.textContent = `Couldn't connect to Google Calendar: ${failure}`;
   else if (!clientId) status.textContent = "Add an OAuth client ID below to show your calendar.";
@@ -81,36 +89,52 @@ async function loadCalendars() {
 
 function disconnect() {
   signOut(token);
+  clearTimeout(expiryTimer);
   token = null;
   calendars = [];
   expired = false;
   calendar.getEventSourceById("google").refetch();
 }
 
-function handle(error) {
-  if (error instanceof SignInExpired) {
-    signOut(null);
-    token = null;
-    calendars = [];
-    expired = true;
-    drawPanel();
-  } else {
-    console.error(error);
-  }
+// Shows the Reconnect button as soon as the hour is up, rather than on the
+// next calendar request.
+let expiryTimer;
+function watchExpiry() {
+  clearTimeout(expiryTimer);
+  expiryTimer = setTimeout(expire, token.expiresAt - Date.now());
 }
 
-connectButton.addEventListener("click", async () => {
+// The stored token stays, so a reload still offers to reconnect.
+function expire() {
+  token = null;
+  calendars = [];
+  expired = true;
+  drawPanel();
+  calendar.getEventSourceById("google").refetch();
+}
+
+function handle(error) {
+  if (error instanceof SignInExpired) expire();
+  else console.error(error);
+}
+
+async function connect() {
   try {
     token = await signIn(clientId);
   } catch (error) {
     failure = error.message;
+    say(`Couldn't connect to Google Calendar: ${failure}`);
     drawPanel();
     return;
   }
   failure = "";
   expired = false;
+  watchExpiry();
   await loadCalendars();
-});
+}
+
+connectButton.addEventListener("click", connect);
+reconnectButton.addEventListener("click", connect);
 
 disconnectButton.addEventListener("click", () => {
   disconnect();

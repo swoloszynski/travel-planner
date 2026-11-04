@@ -1,22 +1,32 @@
 // Reading the user's own Google Calendar. Sign-in uses Google Identity
-// Services, loaded by a script tag in index.html. The access token lasts
-// an hour and is kept in sessionStorage; nothing from Google is saved with
-// the trips or exported.
+// Services, loaded by a script tag in index.html. Google only gives a page
+// without its own server an access token that lasts an hour. It's kept in
+// localStorage so reopening the page within the hour doesn't ask again.
+// Nothing from Google is saved with the trips or exported.
 
 const SCOPE = "https://www.googleapis.com/auth/calendar.readonly";
 const TOKEN_KEY = "travel-planner.google-token";
 
 export class SignInExpired extends Error {}
 
-// The token from earlier in this browser session, if it has at least a
-// minute left.
-export function savedToken() {
+function storedToken() {
   try {
-    const token = JSON.parse(sessionStorage.getItem(TOKEN_KEY));
-    return token?.expiresAt > Date.now() + 60_000 ? token : null;
+    return JSON.parse(localStorage.getItem(TOKEN_KEY));
   } catch {
     return null;
   }
+}
+
+// The token from an earlier sign-in, if it has at least a minute left.
+export function savedToken() {
+  const token = storedToken();
+  return token?.expiresAt > Date.now() + 60_000 ? token : null;
+}
+
+// Whether this browser signed in before and hasn't signed out, even if the
+// token has since run out.
+export function wasSignedIn() {
+  return storedToken() !== null;
 }
 
 // Opens Google's sign-in popup, so it has to be called from a click.
@@ -34,7 +44,11 @@ export function signIn(clientId) {
           return;
         }
         const token = { accessToken: response.access_token, expiresAt: Date.now() + response.expires_in * 1000 };
-        sessionStorage.setItem(TOKEN_KEY, JSON.stringify(token));
+        try {
+          localStorage.setItem(TOKEN_KEY, JSON.stringify(token));
+        } catch {
+          // Signing in still works for this visit.
+        }
         resolve(token);
       },
       error_callback(error) {
@@ -46,7 +60,11 @@ export function signIn(clientId) {
 }
 
 export function signOut(token) {
-  sessionStorage.removeItem(TOKEN_KEY);
+  try {
+    localStorage.removeItem(TOKEN_KEY);
+  } catch {
+    // Nothing was saved.
+  }
   if (token && window.google?.accounts?.oauth2) google.accounts.oauth2.revoke(token.accessToken, () => {});
 }
 
