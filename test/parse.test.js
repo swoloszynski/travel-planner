@@ -13,6 +13,7 @@ const fixtures = [
   "next-year",
   "unknown-airport",
   "depart-arrive",
+  "depart-arrive-weekday",
   "time-then-code",
   "unknown-arrival-airport",
 ];

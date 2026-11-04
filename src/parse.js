@@ -11,6 +11,7 @@
 //   Frontier F9 1234
 //   Depart ATL 2026-10-22 15:49h ET
 //   Arrive LAX 2026-10-22 17:42h PT
+// A weekday can come before the date: "Depart LGA Friday 2026-11-06 12:40".
 import { DateTime } from "luxon";
 import { findAirport } from "./data/airports.js";
 import { AIRLINES } from "./data/airlines.js";
@@ -25,7 +26,8 @@ const CODE_AFTER_TIME = /\d{1,2}:\d{2}\s?[AaPp][Mm]\s*([A-Z]{3})\b/g;
 // "UA 1432", but not the "AM 12" in "9:32 AM 12".
 const FLIGHT_NUMBER = /(?<!\d:\d\d\s?)\b([A-Z][A-Z0-9])\s?(\d{1,4})\b/g;
 // The zone abbreviation after the time is ignored in favor of the airport's.
-const DEPART_OR_ARRIVE = /^(Depart|Arrive)s?\s+([A-Z]{3})\s+(\d{4}-\d{2}-\d{2})[ T]+(\d{1,2}):(\d{2})/i;
+const DEPART_OR_ARRIVE =
+  /^(Depart|Arrive)s?\s+([A-Z]{3})\s+(?:(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun)[a-z]*\.?,?\s+)?(\d{4}-\d{2}-\d{2})[ T]+(\d{1,2}):(\d{2})/i;
 const PRICE = /[A-Z]{0,3}[$€£¥₹]\s?(\d[\d,]*(?:\.\d{1,2})?)/;
 
 // Longest first, so "Air Canada" wins over a shorter name inside it.
